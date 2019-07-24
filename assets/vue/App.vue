@@ -1,38 +1,13 @@
 <template>
     <v-app id="inspire">
-        <v-navigation-drawer
-                v-model="drawer"
-                app
-                clipped
+        <app-navigation-drawer
+                v-if="drawer"
         >
-            <v-list dense>
-                <v-list-item @click="">
-                    <v-list-item-action>
-                        <v-icon>dashboard</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>Dashboard</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-                <v-list-item @click="">
-                    <v-list-item-action>
-                        <v-icon>settings</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>Settings</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list>
-        </v-navigation-drawer>
-
-        <v-app-bar
-                app
-                clipped-left
+        </app-navigation-drawer>
+        <app-navigation-top
+                v-on:switch-drawer="drawer = !drawer"
         >
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer"><v-icon>menu</v-icon></v-app-bar-nav-icon>
-            <v-toolbar-title>Application</v-toolbar-title>
-        </v-app-bar>
-
+        </app-navigation-top>
         <v-content>
             <v-container
                     fluid
@@ -43,34 +18,6 @@
                         justify-center
                 >
                     <v-flex shrink>
-                        <v-tooltip right>
-                            <template v-slot:activator="{ on }">
-                                <v-btn
-                                        :href="source"
-                                        icon
-                                        large
-                                        target="_blank"
-                                        v-on="on"
-                                >
-                                    <v-icon large>mdi-code-tags</v-icon>
-                                </v-btn>
-                            </template>
-                            <span>Source</span>
-                        </v-tooltip>
-                        <v-tooltip right>
-                            <template v-slot:activator="{ on }">
-                                <v-btn
-                                        icon
-                                        large
-                                        href="https://codepen.io/johnjleider/pen/bXNzZL"
-                                        target="_blank"
-                                        v-on="on"
-                                >
-                                    <v-icon large>mdi-codepen</v-icon>
-                                </v-btn>
-                            </template>
-                            <span>Codepen</span>
-                        </v-tooltip>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -81,16 +28,20 @@
 
 <script>
     import AppFooter from './components/app/AppFooter';
+    import AppNavigationDrawer from './components/app/AppNavigationDrawer';
+    import AppNavigationTopBar from './components/app/AppNavigationTopBar';
 
     export default {
         props: {
             source: String,
         },
         components: {
-            'app-footer': AppFooter
+            'app-footer': AppFooter,
+            'app-navigation-drawer': AppNavigationDrawer,
+            'app-navigation-top': AppNavigationTopBar
         },
         data: () => ({
-            drawer: null,
+            drawer: true,
         }),
         created () {
             this.$vuetify.theme.dark = true
