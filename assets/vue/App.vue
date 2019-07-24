@@ -75,17 +75,19 @@
                 </v-layout>
             </v-container>
         </v-content>
-
-        <v-footer app>
-            <span>&copy; 2019</span>
-        </v-footer>
+        <app-footer></app-footer>
     </v-app>
 </template>
 
 <script>
+    import AppFooter from './components/app/AppFooter';
+
     export default {
         props: {
             source: String,
+        },
+        components: {
+            'app-footer': AppFooter
         },
         data: () => ({
             drawer: null,
