@@ -11,15 +11,9 @@
         <v-content>
             <v-container
                     fluid
-                    fill-height
             >
-                <v-layout
-                        align-center
-                        justify-center
-                >
-                    <v-flex shrink>
-                    </v-flex>
-                </v-layout>
+
+                <blog></blog>
             </v-container>
         </v-content>
         <app-footer></app-footer>
@@ -30,6 +24,7 @@
     import AppFooter from './components/app/AppFooter';
     import AppNavigationDrawer from './components/app/AppNavigationDrawer';
     import AppNavigationTopBar from './components/app/AppNavigationTopBar';
+    import Blog from './views/blog/BlogIndex';
 
     export default {
         props: {
@@ -38,7 +33,8 @@
         components: {
             'app-footer': AppFooter,
             'app-navigation-drawer': AppNavigationDrawer,
-            'app-navigation-top': AppNavigationTopBar
+            'app-navigation-top': AppNavigationTopBar,
+            'blog': Blog
         },
         data: () => ({
             drawer: true,
