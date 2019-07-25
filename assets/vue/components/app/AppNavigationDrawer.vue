@@ -4,20 +4,20 @@
             clipped
     >
         <v-list dense>
-            <v-list-item @click="">
+            <v-list-item to="/">
                 <v-list-item-action>
-                    <v-icon>dashboard</v-icon>
+                    <v-icon>home</v-icon>
                 </v-list-item-action>
                 <v-list-item-content>
-                    <v-list-item-title>Dashboard</v-list-item-title>
+                    <v-list-item-title>Accueil</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
-            <v-list-item @click="">
+            <v-list-item to="/blog">
                 <v-list-item-action>
-                    <v-icon>settings</v-icon>
+                    <v-icon>menu</v-icon>
                 </v-list-item-action>
                 <v-list-item-content>
-                    <v-list-item-title>Settings</v-list-item-title>
+                    <v-list-item-title>Blog</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
         </v-list>

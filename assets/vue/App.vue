@@ -13,7 +13,7 @@
                     fluid
             >
 
-                <blog></blog>
+                <router-view></router-view>
             </v-container>
         </v-content>
         <app-footer></app-footer>
@@ -24,7 +24,6 @@
     import AppFooter from './components/app/AppFooter';
     import AppNavigationDrawer from './components/app/AppNavigationDrawer';
     import AppNavigationTopBar from './components/app/AppNavigationTopBar';
-    import Blog from './views/blog/BlogIndex';
 
     export default {
         props: {
@@ -34,7 +33,6 @@
             'app-footer': AppFooter,
             'app-navigation-drawer': AppNavigationDrawer,
             'app-navigation-top': AppNavigationTopBar,
-            'blog': Blog
         },
         data: () => ({
             drawer: true,
