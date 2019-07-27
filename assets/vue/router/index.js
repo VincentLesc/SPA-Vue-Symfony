@@ -11,5 +11,5 @@ export default new VueRouter({
     routes: [
         { path: '/blog', component: Blog},
         { path: '/*', component: Home}
-    ],
+    ]
 });
