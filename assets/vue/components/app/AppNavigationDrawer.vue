@@ -20,6 +20,14 @@
                     <v-list-item-title>Blog</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
+            <v-list-item to="/blog/new">
+                <v-list-item-action>
+                    <v-icon>edit</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>Blog - Nouvel article </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
         </v-list>
     </v-navigation-drawer>
 </template>

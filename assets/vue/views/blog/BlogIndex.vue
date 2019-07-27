@@ -43,7 +43,7 @@
                         class="pa-1"
                 >
                     <v-card
-                            class="pa-3"
+                            class="pa-3 flex-grow-1"
                     >
                         <h3 class="mb-5">{{post.title}}</h3>
                         <p>{{post.content}}</p>
