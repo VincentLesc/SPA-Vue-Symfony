@@ -5,44 +5,57 @@
     >
         <v-flex shrink>
             <h1>Mes articles de blog</h1>
-            <div v-for="post in posts">
-                <h3>{{post.title}}</h3>
-                <p>{{post.description}}</p>
-            </div>
+
+            <section v-if="hasError">
+                <v-alert
+                        border="left"
+                        color="red"
+                        elevation="2"
+                >
+                    <v-icon>error</v-icon>
+                    Oupss...Ce service est indisponible pour le moment
+                </v-alert>
+            </section>
+            <section v-else>
+                <div v-if="loading">
+                    <v-progress-linear
+                            indeterminate
+                            color="cyan"
+                    ></v-progress-linear>
+                </div>
+                <div v-for="post in posts">
+                    <h3>{{post.title}}</h3>
+                    <p>{{post.content}}</p>
+                    <v-btn v-on:click="reversed">Renverser</v-btn>
+                </div>
+            </section>
+
+
+
         </v-flex>
     </v-layout>
 </template>
 <script>
+    import PostAPI from '../../api/post';
+
     export default {
         name: 'blog',
         data: () => ({
-            posts : [
-                {
-                    id:1,
-                    title: 'Mon titre 1',
-                    description: 'Nulla facilisi. Duis quis lorem nisl. Etiam tempus tempus nulla.' +
-                        'Suspendisse potenti. Nulla vehicula interdum vestibulum. Etiam lobortis egestas bibendum.' +
-                        'Morbi id tellus ultricies, tristique ex eget, molestie sem. Aliquam sagittis imperdiet lorem ac auctor. ' +
-                        'Nam ut neque eros. Nullam eget ipsum tincidunt, lobortis nibh non, ultrices purus.'
-                },
-                {
-                    id:2,
-                    title: 'Mon titre 2',
-                    description: 'Nulla facilisi. Duis quis lorem nisl. Etiam tempus tempus nulla.' +
-                        'Suspendisse potenti. Nulla vehicula interdum vestibulum. Etiam lobortis egestas bibendum.' +
-                        'Morbi id tellus ultricies, tristique ex eget, molestie sem. Aliquam sagittis imperdiet lorem ac auctor. ' +
-                        'Nam ut neque eros. Nullam eget ipsum tincidunt, lobortis nibh non, ultrices purus.'
-                },
-                {
-                    id:3,
-                    title: 'Mon titre 3',
-                    description: 'Nulla facilisi. Duis quis lorem nisl. Etiam tempus tempus nulla.' +
-                        'Suspendisse potenti. Nulla vehicula interdum vestibulum. Etiam lobortis egestas bibendum.' +
-                        'Morbi id tellus ultricies, tristique ex eget, molestie sem. Aliquam sagittis imperdiet lorem ac auctor. ' +
-                        'Nam ut neque eros. Nullam eget ipsum tincidunt, lobortis nibh non, ultrices purus.'
-                },
+            posts : [],
+            error: '',
+            loading: true
 
-            ]
         }),
+        created(){
+            PostAPI.getAll()
+                .then(response => this.posts = response.data)
+                .catch(error => this.error = error)
+                .finally(() => this.loading = false)
+        },
+        computed: {
+            hasError() {
+                return this.error !== '';
+            }
+        }
     }
 </script>
