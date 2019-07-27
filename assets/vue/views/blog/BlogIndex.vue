@@ -26,12 +26,8 @@
                 <div v-for="post in posts">
                     <h3>{{post.title}}</h3>
                     <p>{{post.content}}</p>
-                    <v-btn v-on:click="reversed">Renverser</v-btn>
                 </div>
             </section>
-
-
-
         </v-flex>
     </v-layout>
 </template>
