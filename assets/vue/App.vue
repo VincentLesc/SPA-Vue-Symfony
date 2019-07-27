@@ -9,7 +9,12 @@
         >
         </app-navigation-top>
         <v-content>
-                 <router-view></router-view>
+            <v-container
+                    fluid
+            >
+
+                <router-view></router-view>
+            </v-container>
         </v-content>
         <app-footer></app-footer>
     </v-app>

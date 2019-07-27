@@ -16,7 +16,7 @@ class PostFixtures extends Fixture
         for ($i=0; $i<10; $i++) {
             $post = new Post();
             $post->setTitle(Lorem::sentence())
-                ->setContent(Lorem::paragraph(10))
+                ->setContent(Lorem::paragraph())
                 ->setCreatedAt(DateTime::dateTimeThisYear());
             $manager->persist($post);
         }
