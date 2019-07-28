@@ -19,4 +19,14 @@ class SecurityController extends AbstractController
             'roles' => $user->getRoles(),
         ]);
     }
+
+    /**
+     * @Route("/api/logout", name="logout")
+     * @return void
+     * @throws \RuntimeException
+     */
+    public function logout(): void
+    {
+        throw new \RuntimeException('This should not be reached!');
+    }
 }

@@ -19,7 +19,6 @@
                             label="Mot de passe"
                             type="password"
                             :rules="passwordRules"
-                            auto-grow
                             required
                     ></v-text-field>
                     <v-btn v-on:click="login">
@@ -39,7 +38,6 @@
             email : '',
             emailRules: [
                 v => !!v || 'E-mail est obligatoire',
-                v => /.+@.+/.test(v) || 'Le format de vore email n\'est pas valide.',
             ],
             password : '',
             passwordRules: [
@@ -50,6 +48,18 @@
             login(){
                 let data = {email: this.email, plainPassword: this.password};
                 SecurityAPI.login(data)
+                    .then(() => (
+                        this.$notify({
+                            title: 'Vous êtes connecté !',
+                            type: 'success'
+                        })
+                    ))
+                    .catch(() => (
+                        this.$notify({
+                            title: 'Erreur lors de votre identification !',
+                            type: 'error'
+                        })
+                    ))
             }
         }
     }

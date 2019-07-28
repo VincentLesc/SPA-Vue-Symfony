@@ -40,6 +40,12 @@
             create() {
                 let data = {title: this.title, content: this.content};
                 PostAPI.create(data)
+                    .then(() => (this.$router.push('/blog')))
+                    .catch(() => (
+                        this.$notify({
+                        title: 'Erreur lors de l\'enregistrement',
+                        text: 'Une erreur s\'est produite, veuillez réessayer ultérieurement.'
+                    })))
             }
         }
     }

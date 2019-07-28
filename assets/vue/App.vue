@@ -8,6 +8,7 @@
                 v-on:switch-drawer="drawer = !drawer"
         >
         </app-navigation-top>
+        <notifications></notifications>
         <v-content>
                 <router-view></router-view>
         </v-content>

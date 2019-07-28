@@ -12,6 +12,11 @@ class IndexController extends AbstractController
      */
     public function index( $vueRouter = null ,$action = null, $id = null)
     {
-        return $this->render('base.html.twig', []);
+        return $this->render(
+            'base.html.twig',
+            [
+                'isAuthenticated' => $this->getUser() ? true : false
+            ]
+        );
     }
 }
