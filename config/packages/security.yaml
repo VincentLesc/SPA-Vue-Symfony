@@ -20,6 +20,8 @@ security:
                 check_path: /api/login
                 username_path: email
                 password_path: plainPassword
+            logout:
+                path: /api/logout
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

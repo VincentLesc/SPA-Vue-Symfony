@@ -15,7 +15,7 @@ class IndexController extends AbstractController
         return $this->render(
             'base.html.twig',
             [
-                'isAuthenticated' => $this->getUser() ? true : false
+                'isAuthenticated' => json_encode(!empty($this->getUser()))
             ]
         );
     }

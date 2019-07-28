@@ -30,7 +30,6 @@
     </v-layout>
 </template>
 <script>
-    import SecurityAPI from '../../api/security';
 
     export default {
         name: 'login',
@@ -47,19 +46,7 @@
         methods: {
             login(){
                 let data = {email: this.email, plainPassword: this.password};
-                SecurityAPI.login(data)
-                    .then(() => (
-                        this.$notify({
-                            title: 'Vous êtes connecté !',
-                            type: 'success'
-                        })
-                    ))
-                    .catch(() => (
-                        this.$notify({
-                            title: 'Erreur lors de votre identification !',
-                            type: 'error'
-                        })
-                    ))
+                return this.$store.dispatch('security/login', data);
             }
         }
     }
