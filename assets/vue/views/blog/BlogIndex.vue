@@ -45,8 +45,16 @@
                     <v-card
                             class="pa-3 flex-grow-1"
                     >
-                        <h3 class="mb-5">{{post.title}}</h3>
-                        <p>{{post.content}}</p>
+                        <v-layout
+                            class="align-content-space-between"
+                        >
+                            <v-flex
+                            d-flex>
+                            <v-card-title>{{post.title}}</v-card-title>
+                            <v-card-text>{{post.content.slice(0, 150) + '...'}}</v-card-text>
+                            <v-card-text class="text-right" ><small>{{post.createdAt | date}}</small></v-card-text>
+                            </v-flex>
+                        </v-layout>
                     </v-card>
                 </v-flex>
             </v-layout>
@@ -55,6 +63,7 @@
 </template>
 <script>
     import PostAPI from '../../api/post';
+    import moment from 'moment';
 
     export default {
         name: 'blog',
@@ -73,6 +82,13 @@
         computed: {
             hasError() {
                 return this.error !== '';
+            }
+        },
+        filters: {
+            date: function (value) {
+                if (value) {
+                    return moment(String(value)).format('DD/MM/YYYY hh:mm')
+                }
             }
         }
     }
