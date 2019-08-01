@@ -5,12 +5,13 @@ namespace App\EventListener;
 
 
 use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Security;
 
 class PostEventListener
 {
-    /** @var \App\Entity\User $user */
+    /** @var User $user */
     private $user;
 
     public function __construct(Security $security)

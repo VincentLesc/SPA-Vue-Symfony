@@ -47,9 +47,15 @@ class User implements UserInterface
      */
     private $username;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PostMedia", mappedBy="uploadedBy")
+     */
+    private $postMedia;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->postMedia = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,6 +187,37 @@ class User implements UserInterface
     public function setUsername(?string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PostMedia[]
+     */
+    public function getPostMedia(): Collection
+    {
+        return $this->postMedia;
+    }
+
+    public function addPostMedium(PostMedia $postMedium): self
+    {
+        if (!$this->postMedia->contains($postMedium)) {
+            $this->postMedia[] = $postMedium;
+            $postMedium->setUploadedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostMedium(PostMedia $postMedium): self
+    {
+        if ($this->postMedia->contains($postMedium)) {
+            $this->postMedia->removeElement($postMedium);
+            // set the owning side to null (unless already changed)
+            if ($postMedium->getUploadedBy() === $this) {
+                $postMedium->setUploadedBy(null);
+            }
+        }
 
         return $this;
     }
