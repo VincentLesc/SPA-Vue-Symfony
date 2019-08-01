@@ -20,7 +20,7 @@
                     <v-list-item-title>Blog</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
-            <v-list-item to="/blog/new">
+            <v-list-item to="/blog/new" v-if="isAuthenticated">
                 <v-list-item-action>
                     <v-icon>edit</v-icon>
                 </v-list-item-action>

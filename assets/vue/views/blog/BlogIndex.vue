@@ -43,21 +43,17 @@
                         class="pa-1"
                 >
                     <v-card
-                            class="pa-3 flex-grow-1"
+                            class="pa-3 flex-grow-1 fill-height"
                     >
-                        <v-layout
-                            class="align-content-space-between"
-                        >
-                            <v-flex
-                            d-flex>
+                        <v-layout align-space-between column fill-height>
                             <v-card-title>{{post.title}}</v-card-title>
-                            <v-card-text>{{post.content.slice(0, 150) + '...'}}</v-card-text>
-                            <v-card-text class="text-right" >
+                            <v-card-text>{{post.content.slice(0, 350) + '...'}}</v-card-text>
+                            <v-spacer></v-spacer>
+                            <v-card-text class="text-right align-baseline ma-auto" >
                                 <small>{{post.author.username}}</small>
-                                <br>
+                                <v-spacer></v-spacer>
                                 <small>{{post.createdAt | date}}</small>
                             </v-card-text>
-                            </v-flex>
                         </v-layout>
                     </v-card>
                 </v-flex>
@@ -75,7 +71,6 @@
             posts : [],
             error: '',
             loading: true
-
         }),
         created(){
             PostAPI.getAll()
