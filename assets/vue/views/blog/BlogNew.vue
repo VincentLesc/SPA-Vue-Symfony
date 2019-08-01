@@ -19,6 +19,10 @@
                             auto-grow
                             required
                     ></v-textarea>
+                    <media-upload
+                            class="ma-2"
+                    >
+                    </media-upload>
                     <v-btn v-on:click="create">
                         Enregistrer
                     </v-btn>
@@ -29,9 +33,13 @@
 </template>
 <script>
     import PostAPI from '../../api/post';
+    import PostMediaUpload from '../../components/blog/BlogPostNewMediaUpload';
 
     export default {
         name: 'blog-create',
+        components : {
+            'media-upload': PostMediaUpload
+        },
         data: () => ({
             title: '',
             content: ''

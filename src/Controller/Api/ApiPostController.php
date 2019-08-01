@@ -114,4 +114,22 @@ class ApiPostController extends AbstractController
 
         return new JsonResponse('success', 200);
     }
+    /**
+     * @Route("/api/post/media", name="create_post_media", methods={"POST"})
+     * @Security("is_granted('ROLE_USER')")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createPostMedia(Request $request)
+    {
+        $user = $this->getUser();
+        $data = $request->files->get('file');
+        $filename = $user->getUsername() . '_' . uniqid(). '.' . $data->guessExtension();
+        $data->move(
+            $this->getParameter('post_media_directory')  ,
+            $filename
+        );
+        $
+        return new JsonResponse($data);
+    }
 }
