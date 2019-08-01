@@ -48,6 +48,20 @@
                 let data = {email: this.email, plainPassword: this.password};
                 this.$store.dispatch('security/login', data)
                     .then(() => this.$router.push('/home'))
+                    .then(() => this.$notify({
+                        type: 'success',
+                        duration: 5000,
+                        closeOnClick : true,
+                        title: 'Bonjour '+ this.$store.getters['security/getUsername'],
+                        text: 'Vous êtes bien connecté, cela fait plaisir de vous voir ;-)'
+                    }))
+                    .catch(() => this.$notify({
+                        type: 'error',
+                        duration: 5000,
+                        closeOnClick : true,
+                        title: 'La connexion a échouée',
+                        text: 'Vérifiez vos identifiants, votre connexion, ou revenez plus tard ;-)'
+                    }))
             }
         }
     }

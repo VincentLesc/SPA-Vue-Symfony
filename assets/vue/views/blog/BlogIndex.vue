@@ -2,6 +2,9 @@
     <v-container
             fluid
             grid-list-md
+            id="scroll"
+            style="max-height: 100vh;"
+            class="overflow-y-auto"
     >
         <v-layout
                 align-center
@@ -26,8 +29,14 @@
                 </v-alert>
             </v-layout>
         </section>
-        <section v-else>
-            <v-layout wrap justify-content-between>
+        <section
+                v-else
+        >
+            <v-layout
+                    v-scroll:#scroll="onScroll"
+                    wrap
+                    justify-content-between
+            >
                 <v-progress-linear
                         v-if="loading"
                         indeterminate
@@ -41,6 +50,7 @@
                         md4
                         xs12
                         class="pa-1"
+                        :id="post.id"
                 >
                     <v-card
                             class="pa-3 flex-grow-1 fill-height"
@@ -79,12 +89,29 @@
                 .then(response =>
                     this.posts = response.data,
                 )
+                .then( () => this.offset = this.posts.length
+                )
                 .catch(error => this.error = error)
                 .finally(() => this.loading = false)
         },
         computed: {
             hasError() {
                 return this.error !== '';
+            },
+        },
+        methods: {
+            onScroll(e) {
+                let level = (e.target.scrollHeight - e.target.scrollTop -e.target.clientHeight);
+                if (level < 100 && this.loading === false) {
+                    this.loading = true;
+                    let data = {offset: this.offset};
+                    PostAPI.getAll(data)
+                        .then(response =>
+                            this.posts = this.posts.concat(response.data),
+                        )
+                        .catch(error => this.error = error)
+                        .finally(() => this.loading = false)
+                }
             },
         },
         filters: {

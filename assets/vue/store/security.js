@@ -4,15 +4,21 @@ export default {
     namespaced: true,
     state: {
         isAuthenticated: false,
+        username: ''
     },
     getters: {
         isAuthenticated (state) {
             return state.isAuthenticated;
+        },
+        getUsername (state) {
+            return state.username;
         }
     },
     mutations: {
-        ['AUTHENTICATION_SUCCESS'](state) {
+        ['AUTHENTICATION_SUCCESS'](state, payload) {
             state.isAuthenticated = true;
+            state.username = payload.username;
+            console.log(payload);
         },
         ['LOG_OUT'](state, payload) {
             state.isAuthenticated = payload
@@ -25,7 +31,7 @@ export default {
         login({commit}, payload) {
             return SecurityAPI.login(payload)
                 .then(res =>
-                    commit('AUTHENTICATION_SUCCESS')
+                    commit('AUTHENTICATION_SUCCESS', res.data)
                 )
         },
         onRefreshAuthentication ({commit}, payload) {

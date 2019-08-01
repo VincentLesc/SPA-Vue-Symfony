@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class PostRepository extends ServiceEntityRepository
@@ -14,7 +13,15 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
-    public function findAllPostsLazily(int $offset, int $maxResult)
+    /**
+     * Return blog posts lazily
+     *
+     * @param int $offset First result
+     * @param int $maxResult Max results
+     *
+     * @return array
+     */
+    public function findAllPostsLazily(int $offset, int $maxResult) :array
     {
         $qb = $this->createQueryBuilder('p')
             ->setFirstResult($offset)

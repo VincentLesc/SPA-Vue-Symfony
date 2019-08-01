@@ -51,7 +51,7 @@ class ApiPostController extends AbstractController
         $decoder = new JsonDecode();
         $offset = $decoder->decode($offset, 'json')->offset;
 
-        $posts = $this->repository->findAllPostsLazily($offset,9);
+        $posts = $this->repository->findAllPostsLazily($offset,18);
 
         $encoder = new JsonEncoder();
         $callback = function ($innerObject) {
@@ -81,13 +81,13 @@ class ApiPostController extends AbstractController
         $data = $serializer->normalize($posts,
             'json', [
                 'attributes' => [
+                    'id',
                     'title',
                     'content',
                     'createdAt',
                     'author' => [
                         'id',
-                        'username',
-                        'posts'
+                        'username'
                     ]
                 ]
             ]
