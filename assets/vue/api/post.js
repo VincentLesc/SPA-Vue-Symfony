@@ -1,8 +1,12 @@
 import axios from 'axios';
 
 export default {
-    getAll(){
-        return axios.get('/api/posts');
+    getAll(data){
+        return axios.post('/api/posts',
+            {
+                offset: data.offset
+            }
+        );
     },
     create(data){
         return axios.post('/api/post',

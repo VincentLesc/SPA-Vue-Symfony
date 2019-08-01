@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -39,16 +40,20 @@ class ApiPostController extends AbstractController
 
     /**
      * Return All posts in a Json Response
-     * @Route("/api/posts", name="get_all_posts", methods={"GET"})
+     * @Route("/api/posts", name="get_all_posts", methods={"POST"})
+     * @param Request $request
      * @return JsonResponse
      * @throws ExceptionInterface
      */
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $posts = $this->repository->findBy([],['createdAt'=> 'DESC']);
+        $offset = $request->getContent();
+        $decoder = new JsonDecode();
+        $offset = $decoder->decode($offset, 'json')->offset;
+
+        $posts = $this->repository->findAllPostsLazily($offset,9);
 
         $encoder = new JsonEncoder();
-
         $callback = function ($innerObject) {
             return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
         };

@@ -70,18 +70,22 @@
         data: () => ({
             posts : [],
             error: '',
-            loading: true
+            loading: true,
+            offset : 0
         }),
         created(){
-            PostAPI.getAll()
-                .then(response => this.posts = response.data)
+            let data = {offset: this.offset};
+            PostAPI.getAll(data)
+                .then(response =>
+                    this.posts = response.data,
+                )
                 .catch(error => this.error = error)
                 .finally(() => this.loading = false)
         },
         computed: {
             hasError() {
                 return this.error !== '';
-            }
+            },
         },
         filters: {
             date: function (value) {
