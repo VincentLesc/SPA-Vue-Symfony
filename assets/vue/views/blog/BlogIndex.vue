@@ -52,7 +52,11 @@
                             d-flex>
                             <v-card-title>{{post.title}}</v-card-title>
                             <v-card-text>{{post.content.slice(0, 150) + '...'}}</v-card-text>
-                            <v-card-text class="text-right" ><small>{{post.createdAt | date}}</small></v-card-text>
+                            <v-card-text class="text-right" >
+                                <small>{{post.author.username}}</small>
+                                <br>
+                                <small>{{post.createdAt | date}}</small>
+                            </v-card-text>
                             </v-flex>
                         </v-layout>
                     </v-card>

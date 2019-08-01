@@ -32,6 +32,11 @@ class Post
      */
     private $createdAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
+     */
+    private $author;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,14 +73,24 @@ class Post
     }
 
 
-    /**
-     * @ORM\PrePersist()
-     * @return Post
-     * @throws \Exception
-     */
-    public function setCreatedAt(): self
+    public function setCreatedAt($datetime = null): self
     {
-        $this->createdAt = new \DateTime('now');
+        if (!$datetime) {
+            $this->createdAt = new \DateTime('now');
+        } else {
+            $this->createdAt = $datetime;
+        }
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

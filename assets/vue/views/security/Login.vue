@@ -46,7 +46,8 @@
         methods: {
             login(){
                 let data = {email: this.email, plainPassword: this.password};
-                return this.$store.dispatch('security/login', data);
+                this.$store.dispatch('security/login', data)
+                    .then(() => this.$router.push('/home'))
             }
         }
     }
