@@ -1,11 +1,10 @@
 <?php
 
-
 namespace App\Controller\Api;
-
 
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +14,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class ApiPostController extends AbstractController
 {
@@ -28,6 +28,7 @@ class ApiPostController extends AbstractController
      * ApiPostController constructor.
      * @param PostRepository $repository
      * @param SerializerInterface $serializer
+     * @param EntityManagerInterface $em
      */
     public function __construct(PostRepository $repository, SerializerInterface $serializer, EntityManagerInterface $em)
     {
@@ -40,12 +41,14 @@ class ApiPostController extends AbstractController
      * Return All posts in a Json Response
      * @Route("/api/posts", name="get_all_posts", methods={"GET"})
      * @return JsonResponse
-     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @throws ExceptionInterface
      */
     public function getAll()
     {
         $posts = $this->repository->findBy([],['createdAt'=> 'DESC']);
+
         $encoder = new JsonEncoder();
+
         $callback = function ($innerObject) {
             return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
         };
@@ -59,7 +62,15 @@ class ApiPostController extends AbstractController
                 'createdAt' => $callback,
             ],
         ];
-        $normalizer = new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
+        $normalizer = new ObjectNormalizer(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $defaultContext
+        );
 
         $serializer = new Serializer([$normalizer], [$encoder]);
         $data = $serializer->normalize($posts,
@@ -85,6 +96,7 @@ class ApiPostController extends AbstractController
 
     /**
      * @Route("/api/post", name="create_post", methods={"POST"})
+     * @Security("is_granted('ROLE_USER')")
      * @param Request $request
      * @return JsonResponse
      */
