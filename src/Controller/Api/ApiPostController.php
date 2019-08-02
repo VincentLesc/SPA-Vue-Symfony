@@ -129,7 +129,7 @@ class ApiPostController extends AbstractController
             $this->getParameter('post_media_directory')  ,
             $filename
         );
-        $
+
         return new JsonResponse($data);
     }
 }
