@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\PostMedia;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -25,6 +26,8 @@ class ApiPostController extends AbstractController
 
     private $em;
 
+    private $decoder;
+
     /**
      * ApiPostController constructor.
      * @param PostRepository $repository
@@ -36,6 +39,7 @@ class ApiPostController extends AbstractController
         $this->repository = $repository;
         $this->serializer = $serializer;
         $this->em = $em;
+        $this->decoder = new JsonDecode();
     }
 
     /**
@@ -114,11 +118,14 @@ class ApiPostController extends AbstractController
 
         return new JsonResponse('success', 200);
     }
+
     /**
      * @Route("/api/post/media", name="create_post_media", methods={"POST"})
      * @Security("is_granted('ROLE_USER')")
      * @param Request $request
      * @return JsonResponse
+     * @throws \Exception
+     * @throws ExceptionInterface
      */
     public function createPostMedia(Request $request)
     {
@@ -129,7 +136,55 @@ class ApiPostController extends AbstractController
             $this->getParameter('post_media_directory')  ,
             $filename
         );
-        $
-        return new JsonResponse($data);
+
+        $media = new PostMedia();
+        dump($request->request->get('alt'));
+        $media->setFile($filename)
+            ->setAlt($request->request->get('alt'))
+            ->setCreatedAt(new \DateTime('now'))
+            ->setUploadedBy($this->getUser());
+
+        $this->em->persist($media);
+        $this->em->flush();
+
+
+        $callback = function ($innerObject) {
+            return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
+        };
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+                return [
+                    'id' => $object->getId(),
+                ];
+            },
+            AbstractNormalizer::CALLBACKS => [
+                'createdAt' => $callback,
+            ],
+        ];
+        $encoders = [new JsonEncoder()];
+        $normalizer = new ObjectNormalizer(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $defaultContext
+        );
+        $serializer = new Serializer([$normalizer], $encoders);
+        $jsonObject = $serializer->serialize($media, 'json');
+
+
+        $data = $serializer->normalize($jsonObject,
+            'json', [
+                'attributes' => [
+                    'id',
+                    'alt',
+                    'file'
+                ]
+            ]
+        );
+
+        return new JsonResponse($data, 200);
     }
 }
