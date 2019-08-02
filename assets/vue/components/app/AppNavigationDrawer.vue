@@ -36,6 +36,14 @@
                     <v-list-item-title>Connexion</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
+            <v-list-item to="/register" v-if="!isAuthenticated">
+                <v-list-item-action>
+                    <v-icon>power_settings_new</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>Inscription</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
             <v-list-item to="/api/logout" v-on:click="logout" v-else>
                 <v-list-item-action>
                     <v-icon>power_settings_new</v-icon>

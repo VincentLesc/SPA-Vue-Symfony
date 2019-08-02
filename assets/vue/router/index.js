@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Blog from '../views/blog/BlogIndex';
 import BlogNew from '../views/blog/BlogNew';
 import SecurityLogin from '../views/security/Login';
+import SecurityRegister from '../views/security/Register';
 import Home from '../views/Home';
 
 
@@ -14,6 +15,7 @@ export default new VueRouter({
         { path: '/blog', component: Blog},
         { path: '/blog/new', component: BlogNew},
         { path: '/login', component: SecurityLogin},
+        { path: '/register', component: SecurityRegister},
         { path: '/*', component: Home}
     ]
 });
