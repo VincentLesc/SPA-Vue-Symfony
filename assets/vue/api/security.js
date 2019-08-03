@@ -6,5 +6,8 @@ export default {
     },
     isUnique(data) {
       return axios.post('/api/security/control', data)
+    },
+    register(data) {
+        return axios.post('/api/register', data)
     }
 }

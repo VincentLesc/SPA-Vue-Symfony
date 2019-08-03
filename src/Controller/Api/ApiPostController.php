@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\PostMedia;
+use App\Repository\PostMediaRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -108,11 +109,30 @@ class ApiPostController extends AbstractController
      * @Security("is_granted('ROLE_USER')")
      * @param Request $request
      * @return JsonResponse
+     * @throws ExceptionInterface
      */
-    public function create(Request $request)
+    public function create(Request $request, PostMediaRepository $postMediaRepository)
     {
         $data = $request->getContent();
-        $data = $this->serializer->deserialize($data, 'App\Entity\Post', 'json');
+        $callback = function ($innerObject, $postMediaRepository) {
+            return $postMediaRepository->find($innerObject->getMedia()->getId());
+        };
+        $defaultContext = [AbstractNormalizer::CALLBACKS => ['media' => $callback]];
+        $encoders = [new JsonEncoder()];
+        $normalizer = new ObjectNormalizer(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $defaultContext
+        );
+
+        $serializer = new Serializer([$normalizer], $encoders);
+        $data = $serializer->denormalize($data, 'json');
+
+        $data = $serializer->deserialize($data, 'App\Entity\Post', 'json');
         $this->em->persist($data);
         $this->em->flush();
 
@@ -148,8 +168,11 @@ class ApiPostController extends AbstractController
         $this->em->flush();
 
 
-        $callback = function ($innerObject) {
+        $callbackDatetime = function ($innerObject) {
             return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
+        };
+        $callbackFile = function ($filename) {
+            return $this->getParameter('public_post_media_directory') . '/' . $filename;
         };
         $defaultContext = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
@@ -158,7 +181,8 @@ class ApiPostController extends AbstractController
                 ];
             },
             AbstractNormalizer::CALLBACKS => [
-                'createdAt' => $callback,
+                'createdAt' => $callbackDatetime,
+                'file' => $callbackFile
             ],
         ];
         $encoders = [new JsonEncoder()];
@@ -172,10 +196,7 @@ class ApiPostController extends AbstractController
             $defaultContext
         );
         $serializer = new Serializer([$normalizer], $encoders);
-        $jsonObject = $serializer->serialize($media, 'json');
-
-
-        $data = $serializer->normalize($jsonObject,
+        $data = $serializer->normalize($media,
             'json', [
                 'attributes' => [
                     'id',
@@ -184,7 +205,8 @@ class ApiPostController extends AbstractController
                 ]
             ]
         );
+        $data = $serializer->serialize($data, 'json');
 
-        return new JsonResponse($data, 200);
+        return $this->json($data);
     }
 }

@@ -53,7 +53,7 @@
                         }
                     }
                 )
-                    .then(()=>(console.log('Upload done')))
+                    .then( payload =>{this.$emit('media-uploaded', payload )})
             },
             handleFileUpload(){
                 this.file = this.$refs.file.files[0];

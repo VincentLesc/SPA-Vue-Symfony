@@ -9,10 +9,12 @@ export default {
         );
     },
     create(data){
+        console.log(data);
         return axios.post('/api/post',
             {
                 title: data.title,
-                content: data.content
+                content: data.content,
+                media: data.media
             }
         );
     }
