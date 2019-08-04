@@ -29,6 +29,14 @@
                     <v-list-item-title>Blog - Nouvel article </v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
+            <v-list-item to="/user/profile" v-if="isAuthenticated">
+                <v-list-item-action>
+                    <v-icon>person</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>Mon profil</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
             <v-list-item to="/login" v-if="!isAuthenticated">
                 <v-list-item-action>
                     <v-icon>power_settings_new</v-icon>
