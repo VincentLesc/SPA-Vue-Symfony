@@ -68,8 +68,15 @@
             validConfirmPassword: false,
             validForm: false
         }),
-        computed: {
-            seEmailErrors() {
+        created() {
+            if (this.$store.getters['security/isAuthenticated']) {
+                this.$router.push('/home')
+                this.$notify({
+                    type: 'warn',
+                    duration: 5000,
+                    closeOnClick : true,
+                    title: 'Vous êtes déjà connecté !',
+                })
             }
         },
         methods: {

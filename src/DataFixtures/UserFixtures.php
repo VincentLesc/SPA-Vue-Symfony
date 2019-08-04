@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Post;
 use App\Entity\User;
+use App\Entity\UserProfile;
 use App\Repository\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -33,6 +34,9 @@ class UserFixtures extends Fixture
                 ->setPassword($this->encoder->encodePassword($user, 'toto'))
                 ->setUsername('Username'.$i);
             $manager->persist($user);
+            $profile = new UserProfile();
+            $profile->setUser($user);
+            $manager->persist($profile);
             $manager->flush();
             $users = $this->repository->findAll();
             $length = count($users);

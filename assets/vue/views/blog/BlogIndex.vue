@@ -50,7 +50,7 @@
                         md4
                         xs12
                         class="pa-1"
-                        :id="post.id"
+                        :id="post.id.toString()"
                 >
                     <v-card
                             class="pa-3 flex-grow-1 fill-height"

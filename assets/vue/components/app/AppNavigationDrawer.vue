@@ -1,7 +1,8 @@
 <template>
     <v-navigation-drawer
             app
-            clipped
+            fixed
+            clipped-left
     >
         <v-list dense>
             <v-list-item to="/">

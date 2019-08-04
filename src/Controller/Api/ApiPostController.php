@@ -31,6 +31,7 @@ class ApiPostController extends AbstractController
 
     /**
      * ApiPostController constructor.
+     *
      * @param PostRepository $repository
      * @param SerializerInterface $serializer
      * @param EntityManagerInterface $em
@@ -45,7 +46,9 @@ class ApiPostController extends AbstractController
 
     /**
      * Return All posts in a Json Response
+     *
      * @Route("/api/posts", name="get_all_posts", methods={"POST"})
+     *
      * @param Request $request
      * @return JsonResponse
      * @throws ExceptionInterface
@@ -105,7 +108,10 @@ class ApiPostController extends AbstractController
 
 
     /**
+     * Create a new post for blog section
+     *
      * @Route("/api/post", name="create_post", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_USER')")
      * @param Request $request
      * @return JsonResponse
@@ -140,7 +146,10 @@ class ApiPostController extends AbstractController
     }
 
     /**
+     * Create a new media related a post
+     *
      * @Route("/api/post/media", name="create_post_media", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_USER')")
      * @param Request $request
      * @return JsonResponse
@@ -158,7 +167,6 @@ class ApiPostController extends AbstractController
         );
 
         $media = new PostMedia();
-        dump($request->request->get('alt'));
         $media->setFile($filename)
             ->setAlt($request->request->get('alt'))
             ->setCreatedAt(new \DateTime('now'))
