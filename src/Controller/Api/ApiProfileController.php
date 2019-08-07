@@ -53,7 +53,7 @@ class ApiProfileController extends AbstractController
             return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
         };
         $callbackFile = function ($filename) {
-            return $this->getParameter('public_post_media_directory') . '/' . $filename;
+            return $this->getParameter('public_user_profile_media_directory') . '/' . $filename;
         };
         $defaultContext = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {

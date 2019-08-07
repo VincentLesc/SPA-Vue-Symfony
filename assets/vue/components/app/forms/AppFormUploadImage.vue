@@ -1,9 +1,10 @@
 <template>
     <div>
         <v-img
-                :src="require('../../../images/image-placeholder-350x350.png')"
+                :src="file"
                 class="mr-1 mb-1"
                 v-on:click="selectInput"
+                contain
         >
         </v-img>
         <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" class="ma-3" style="display: none"/>
@@ -20,7 +21,7 @@
         }),
         methods: {
             selectInput() {
-                document.querySelector('#file').click();
+                this.$el.querySelector('input').click();
             },
             handleFileUpload(){
                 this.file = this.$refs.file.files[0];
@@ -35,8 +36,13 @@
                         }
                     }
                 )
-                    .then( payload =>{this.$emit('media-uploaded', payload )})
+                    .then( payload =>{this.file = JSON.parse(payload.data).file})
             },
+        },
+        mounted() {
+            if (this.file === '') {
+                this.file = require('../../../../images/image-placeholder-350x350.png');
+            }
         }
     }
 </script>

@@ -17,23 +17,23 @@
                         Mon titre
                     </v-card-title>
                     <v-card-text>
-                        <v-layout>
-                            <v-flex md6>
+                        <v-layout wrap>
+                            <v-flex md6 xs12>
                                 <input-image></input-image>
                             </v-flex>
-                            <v-flex md3>
-                                <v-flex>
+                            <v-flex md3 xs6>
+                                <v-flex xs12>
                                     <input-image></input-image>
                                 </v-flex>
-                                <v-flex>
+                                <v-flex xs12>
                                     <input-image></input-image>
                                 </v-flex>
                             </v-flex>
-                            <v-flex md3>
-                                <v-flex>
+                            <v-flex md3 xs6>
+                                <v-flex xs12>
                                     <input-image></input-image>
                                 </v-flex>
-                                <v-flex>
+                                <v-flex xs12>
                                     <input-image></input-image>
                                 </v-flex>
                             </v-flex>
@@ -204,7 +204,7 @@
     </v-flex>
 </template>
 <script>
-    import InputImage from '../../components/app/AppFormUploadImage';
+    import InputImage from '../../components/app/forms/AppFormUploadImage';
 
     export default {
         name: 'profile-user',
@@ -214,6 +214,11 @@
         }),
         components: {
             'input-image' : InputImage
+        },
+        methods: {
+            onMediaUploaded() {
+
+            }
         }
     }
 </script>
