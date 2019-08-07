@@ -35,7 +35,7 @@
             'app-navigation-top': AppNavigationTopBar,
         },
         data: () => ({
-            drawer: true,
+            drawer: false,
         }),
         created () {
             this.$vuetify.theme.dark = true;

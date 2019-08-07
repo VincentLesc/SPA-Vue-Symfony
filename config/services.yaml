@@ -6,6 +6,8 @@
 parameters:
     post_media_directory: '%kernel.project_dir%/public/uploads/post/media'
     public_post_media_directory: '/uploads/post/media'
+    user_profile_media_directory: '%kernel.project_dir%/public/uploads/profile/media'
+    public_user_profile_media_directory: '/uploads/profile/media'
 
 services:
     # default configuration for services in *this* file
