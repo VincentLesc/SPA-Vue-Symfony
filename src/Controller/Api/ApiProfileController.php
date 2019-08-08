@@ -25,6 +25,56 @@ class ApiProfileController extends AbstractController
     }
 
     /**
+     * @Route("/api/user/profile", name="user_profile")
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     */
+    public function getUserProfile() {
+        $profile = $this->getUser()->getUserProfile();
+        $callbackDatetime = function ($innerObject) {
+            return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
+        };
+        $callbackFile = function ($filename) {
+            return $this->getParameter('public_user_profile_media_directory') . '/' . $filename;
+        };
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+                return [
+                    'id' => $object->getId(),
+                ];
+            },
+            AbstractNormalizer::CALLBACKS => [
+                'createdAt' => $callbackDatetime,
+                'file' => $callbackFile
+            ],
+        ];
+        $encoders = [new JsonEncoder()];
+        $normalizer = new ObjectNormalizer(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $defaultContext
+        );
+        $serializer = new Serializer([$normalizer], $encoders);
+        $data = $serializer->normalize($profile,
+            'json', [
+                'attributes' => [
+                    'id',
+                    'userProfileMedia'
+                ]
+            ]
+        );
+        $data = $serializer->serialize($data, 'json');
+
+        return $this->json($data);
+
+    }
+
+    /**
      * @Route("/api/profile/media", name="create_profile_media", methods={"POST"})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
