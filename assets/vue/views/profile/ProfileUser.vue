@@ -20,8 +20,10 @@
                                     <input-image></input-image>
                                 </v-flex>
                                 <v-flex xs6 md4 v-for="image in images" :key="image.id">
-                                    <input-image :file="image.file" :id="image.id"></input-image>
+                                    <input-image :file="image.file" :id="image.id" :iser="image.isPublic" :image="image"></input-image>
+                                    <p v-if="image.isPublic">{{image.id}}</p>
                                 </v-flex>
+
                             </v-layout>
                         </v-card-text>
                     </v-card>
@@ -59,6 +61,7 @@
         },
         computed : {
             images() {
+                console.log(this.$store.getters['profile/getImages']);
                 return this.$store.getters['profile/getImages'];
             }
         }

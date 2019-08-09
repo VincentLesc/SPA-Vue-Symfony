@@ -32,6 +32,16 @@ class UserProfileMedia
      */
     private $profile;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isPublic;
+
+    public function __construct()
+    {
+        $this->setIsPublic(true);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +79,18 @@ class UserProfileMedia
     public function setProfile(?UserProfile $profile): self
     {
         $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function getIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(?bool $isPublic): self
+    {
+        $this->isPublic = $isPublic;
 
         return $this;
     }

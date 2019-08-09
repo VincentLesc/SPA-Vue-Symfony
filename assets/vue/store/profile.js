@@ -12,6 +12,7 @@ export default {
     },
     mutations: {
         ['LOAD_SUCCESS'](state, payload) {
+            console.log(payload)
             state.images = payload.userProfileMedia;
         },
         ['IMAGE_UPLOAD_SUCCESS'](state, payload) {

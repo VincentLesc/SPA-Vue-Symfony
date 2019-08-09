@@ -19,5 +19,11 @@ export default {
         return axios.delete(
             '/api/profile/media/'+payload
         )
+    },
+    updateProfilePicture(payload) {
+        return axios.put(
+            '/api/profile/media/'+payload.id,
+            payload
+        )
     }
 }

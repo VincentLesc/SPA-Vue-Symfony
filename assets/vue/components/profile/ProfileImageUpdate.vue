@@ -6,7 +6,7 @@
                 width="1000"
         >
             <v-card>
-                <v-img :src="file" :id="id">
+                <v-img :src="source" :id="id">
                     <v-layout pa-2 row fill-height class="lightbox white--text">
                         <v-spacer></v-spacer>
                         <v-flex xs2 md1>
@@ -26,6 +26,7 @@
                                             class="ma-0 white--text"
                                             fab
                                             small
+                                            v-on:click="setVisibilityPicture"
                                     >
                                         <v-icon dark>mdi-eye-off</v-icon>
                                     </v-btn>
@@ -40,9 +41,17 @@
 </template>
 
 <script>
+    import ProfileAPI from '../../api/profile';
+
     export default {
         name: "ProfileImageUpdate",
-        props: ['dialog', 'file', 'id'],
+        props: {
+            dialog: Boolean,
+            file: String,
+            id: Number,
+            isPublic: Boolean,
+            image: Object
+        },
         computed: {
             openDialog : {
                 get: function () {
@@ -51,12 +60,31 @@
                 set: function () {
                     return !this.dialog;
                 }
+            },
+            source : {
+                get: function () {
+                    return this.file
+                }
+            },
+            visibility : {
+                get: function () {
+                    return this.isPublic
+                },
+                set: function () {
+                    return !this.isPublic
+                }
             }
         },
         methods: {
-            deletePicture(){
+            deletePicture() {
                 this.$store.dispatch('profile/deleteProfilePicture', this.id)
+            },
+            setVisibilityPicture() {
+                console.log(this.$props);
+
             }
+        },
+        created() {
         }
     }
 </script>

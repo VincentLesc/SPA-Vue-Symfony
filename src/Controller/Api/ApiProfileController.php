@@ -132,8 +132,8 @@ class ApiProfileController extends AbstractController
             'json', [
                 'attributes' => [
                     'id',
-                    'alt',
-                    'file'
+                    'file',
+                    'isPublic'
                 ]
             ]
         );
@@ -162,6 +162,27 @@ class ApiProfileController extends AbstractController
             'id' => $id,
             'file' => $filename
         ];
+
+        return $this->json($data, 200);
+    }
+
+    /**
+     * @Route("api/profile/media/{media}", name="update_profile_media", methods={"PUT"})
+     * @param UserProfileMedia $media
+     * @param Request $request
+     */
+    public function updateProfileMedia(UserProfileMedia $media, Request $request)
+    {
+        dump($media);
+        $data = json_decode($request->getContent());
+        dump($data);
+        dump($data->visibility);
+        if (isset($data->visibility)) {
+            $media->setIsPublic($data->visibility);
+        }
+
+        $this->em->persist($media);
+        $this->em->flush();
 
         return $this->json($data, 200);
     }
