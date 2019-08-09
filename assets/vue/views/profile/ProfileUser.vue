@@ -1,5 +1,5 @@
 <template>
-    <v-flex grid-list-xl>
+    <v-flex grid-list-xl class="overflow-auto">
         <v-layout
                 align-start
                 justify-center
@@ -7,6 +7,7 @@
                 fill-height
                 wrap
                 ma-3
+                class="overflow-auto"
         >
             <v-flex xs12 class="text-center">
                 <h1>Mon profil</h1>
@@ -17,12 +18,13 @@
                         Mes images
                     </v-card-title>
                     <v-card-text>
-                        <v-layout wrap>
-                            <v-flex md6 xs6>
-                                <v-flex xs12 v-on: v-for="image in images" :key="image.id">
+                        <v-layout wrap row>
+                                <v-flex xs4>
+                                    <input-image></input-image>
+                                </v-flex>
+                                <v-flex xs4 v-on: v-for="image in images" :key="image.id">
                                   <input-image :file="image.file"></input-image>
                                 </v-flex>
-                            </v-flex>
                         </v-layout>
                     </v-card-text>
                 </v-card>

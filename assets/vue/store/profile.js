@@ -12,7 +12,10 @@ export default {
     },
     mutations: {
         ['LOAD_SUCCESS'](state, payload) {
-            state.images = payload.userProfileMedia.slice(0,5);
+            state.images = payload.userProfileMedia;
+        },
+        ['IMAGE_UPLOAD_SUCCESS'](state, payload) {
+            state.images.push(payload);
         }
     },
     actions: {
@@ -22,5 +25,9 @@ export default {
                     commit('LOAD_SUCCESS', JSON.parse(res.data))
                 )
         },
+        addProfilePicture({commit}, payload) {
+            return ProfileAPI.addProfilePicture(payload)
+                .then( res => commit('IMAGE_UPLOAD_SUCCESS', JSON.parse(res.data)))
+        }
     }
 }

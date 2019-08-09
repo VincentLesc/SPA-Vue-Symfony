@@ -1,7 +1,6 @@
 <template>
     <v-app
             id="inspire"
-            class="overflow-hidden"
             style="max-height: 100vh;"
     >
         <app-navigation-drawer

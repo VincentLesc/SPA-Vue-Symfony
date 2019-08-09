@@ -84,11 +84,13 @@ class ApiProfileController extends AbstractController
     {
         $user = $this->getUser();
         $data = $request->files->get('file');
+        dump($data->guessExtension());
         $filename = $user->getUsername() . '_' . uniqid(). '.' . $data->guessExtension();
-        $data->move(
+        $control = $data->move(
             $this->getParameter('user_profile_media_directory')  ,
             $filename
         );
+        dump($control);
 
         $media = new UserProfileMedia();
         $media->setFile($filename)
