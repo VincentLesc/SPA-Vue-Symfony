@@ -14,5 +14,10 @@ export default {
                 }
             }
         )
+    },
+    removeProfilePicture(payload) {
+        return axios.delete(
+            '/api/profile/media/'+payload
+        )
     }
 }

@@ -5,7 +5,7 @@
                 width="1000"
         >
             <v-card>
-                <v-img :src="file">
+                <v-img :src="file" :id="id">
                     <v-layout pa-2 row fill-height class="lightbox white--text">
                         <v-spacer></v-spacer>
                         <v-flex xs2 md1>
@@ -15,6 +15,7 @@
                                             class="ma-0 white--text"
                                             fab
                                             small
+                                            v-on:click="deletePicture"
                                     >
                                         <v-icon dark>mdi-delete</v-icon>
                                     </v-btn>
@@ -40,10 +41,15 @@
 <script>
     export default {
         name: "ProfileImageUpdate",
-        props: ['dialog', 'file'],
+        props: ['dialog', 'file', 'id'],
         computed: {
             openDialog () {
                 return  this.dialog
+            }
+        },
+        methods: {
+            deletePicture(){
+                this.$store.dispatch('profile/deleteProfilePicture', this.id)
             }
         }
     }

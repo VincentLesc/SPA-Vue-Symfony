@@ -23,7 +23,7 @@
                                     <input-image></input-image>
                                 </v-flex>
                                 <v-flex xs4 v-for="image in images" :key="image.id">
-                                    <input-image :file="image.file"></input-image>
+                                    <input-image :file="image.file" :id="image.id"></input-image>
                                 </v-flex>
                             </v-layout>
                         </v-card-text>

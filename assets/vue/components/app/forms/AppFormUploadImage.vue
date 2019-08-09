@@ -8,7 +8,7 @@
         >
         </v-img>
         <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" class="ma-3" style="display: none"/>
-        <profile-image-update :dialog="imageUpdate" :file="file"></profile-image-update>
+        <profile-image-update :dialog="imageUpdate" :file="file" :id="id"></profile-image-update>
     </div>
 </template>
 
@@ -21,7 +21,7 @@
             defaultFile: '',
             imageUpdate: false
         }),
-        props: ['file'],
+        props: ['file', 'id'],
         components: {
             'profile-image-update': ProfileImageUpdate
         },

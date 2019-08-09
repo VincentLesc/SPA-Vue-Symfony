@@ -15,7 +15,18 @@ export default {
             state.images = payload.userProfileMedia;
         },
         ['IMAGE_UPLOAD_SUCCESS'](state, payload) {
-            state.images.push(payload);
+            state.images.unshift(payload);
+        },
+        ['IMAGE_DELETE_SUCCESS'](state, payload) {
+            state.images = state.images.filter(
+                function (obj) {
+                    if (obj.id === payload.data.id) {
+                        return false
+                    } else {
+                        return true
+                    }
+                }
+            );
         }
     },
     actions: {
@@ -28,6 +39,10 @@ export default {
         addProfilePicture({commit}, payload) {
             return ProfileAPI.addProfilePicture(payload)
                 .then( res => commit('IMAGE_UPLOAD_SUCCESS', JSON.parse(res.data)))
+        },
+        deleteProfilePicture({commit}, payload) {
+            return ProfileAPI.removeProfilePicture(payload)
+                .then( res => commit('IMAGE_DELETE_SUCCESS', res))
         }
     }
 }

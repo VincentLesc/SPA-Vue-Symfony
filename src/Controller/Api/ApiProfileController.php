@@ -84,13 +84,11 @@ class ApiProfileController extends AbstractController
     {
         $user = $this->getUser();
         $data = $request->files->get('file');
-        dump($data->guessExtension());
         $filename = $user->getUsername() . '_' . uniqid(). '.' . $data->guessExtension();
         $control = $data->move(
             $this->getParameter('user_profile_media_directory')  ,
             $filename
         );
-        dump($control);
 
         $media = new UserProfileMedia();
         $media->setFile($filename)
@@ -141,5 +139,25 @@ class ApiProfileController extends AbstractController
         $data = $serializer->serialize($data, 'json');
 
         return $this->json($data);
+    }
+
+    /**
+     * @Route("/api/profile/media/{media}", name="delete_profile_media" ,methods={"DELETE"})
+     *
+     * @param Request $request
+     */
+    public function deleteProfileMedia(UserProfileMedia $media)
+    {
+        $id = $media->getId();
+        $filename = $media->getFile();
+        $this->em->remove($media);
+        $this->em->flush();
+
+        $data = [
+            'id' => $id,
+            'file' => $filename
+        ];
+
+        return $this->json($data, 200);
     }
 }
