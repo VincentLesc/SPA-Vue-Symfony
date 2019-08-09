@@ -50,7 +50,7 @@
             file: String,
             id: Number,
             isPublic: Boolean,
-            image: Object
+            image: Array
         },
         computed: {
             openDialog : {
@@ -80,7 +80,12 @@
                 this.$store.dispatch('profile/deleteProfilePicture', this.id)
             },
             setVisibilityPicture() {
-                console.log(this.$props);
+                this.isPublic = this.visibility;
+                let payload = {
+                    'id': this.id,
+                    'isPublic': this.isPublic
+                };
+                ProfileAPI.updateProfilePicture(payload)
 
             }
         },

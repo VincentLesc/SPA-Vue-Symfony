@@ -176,9 +176,8 @@ class ApiProfileController extends AbstractController
         dump($media);
         $data = json_decode($request->getContent());
         dump($data);
-        dump($data->visibility);
-        if (isset($data->visibility)) {
-            $media->setIsPublic($data->visibility);
+        if (isset($data->isPublic)) {
+            $media->setIsPublic($data->isPublic);
         }
 
         $this->em->persist($media);
