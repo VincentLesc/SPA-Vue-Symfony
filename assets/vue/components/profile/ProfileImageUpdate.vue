@@ -2,6 +2,7 @@
     <div class="text-center">
         <v-dialog
                 v-model="openDialog"
+                class="pa-0"
                 width="1000"
         >
             <v-card>
@@ -43,8 +44,13 @@
         name: "ProfileImageUpdate",
         props: ['dialog', 'file', 'id'],
         computed: {
-            openDialog () {
-                return  this.dialog
+            openDialog : {
+                get: function () {
+                    return this.dialog;
+                },
+                set: function () {
+                    return !this.dialog;
+                }
             }
         },
         methods: {

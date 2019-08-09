@@ -4,12 +4,13 @@
 namespace App\Controller\Api;
 
 
-use App\Entity\PostMedia;
 use App\Entity\UserProfileMedia;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -27,8 +28,8 @@ class ApiProfileController extends AbstractController
     /**
      * @Route("/api/user/profile", name="user_profile")
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @return JsonResponse
+     * @throws ExceptionInterface
      */
     public function getUserProfile() {
         $profile = $this->getUser()->getUserProfile();
@@ -77,8 +78,8 @@ class ApiProfileController extends AbstractController
     /**
      * @Route("/api/profile/media", name="create_profile_media", methods={"POST"})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @return JsonResponse
+     * @throws ExceptionInterface
      */
     public function createProfileMedia(Request $request)
     {
@@ -144,10 +145,14 @@ class ApiProfileController extends AbstractController
     /**
      * @Route("/api/profile/media/{media}", name="delete_profile_media" ,methods={"DELETE"})
      *
-     * @param Request $request
+     * @param UserProfileMedia $media
+     * @return JsonResponse
      */
     public function deleteProfileMedia(UserProfileMedia $media)
     {
+        if ($media->getProfile()->getUser() !== $this->getUser()) {
+            return $this->json('Not Allowed', 401);
+        };
         $id = $media->getId();
         $filename = $media->getFile();
         $this->em->remove($media);
