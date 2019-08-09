@@ -9,7 +9,7 @@
                     <v-layout pa-2 row fill-height class="lightbox white--text">
                         <v-spacer></v-spacer>
                         <v-flex xs2 md1>
-                            <v-layout column class="align-center">
+                            <v-layout column class="align-center overflow-y-auto">
                                 <v-flex xs12>
                                     <v-btn
                                             class="ma-0 white--text"
