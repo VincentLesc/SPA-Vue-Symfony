@@ -37,6 +37,12 @@ class PostMedia
      */
     private $file;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="media")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $post;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +92,18 @@ class PostMedia
     public function setFile(string $file): self
     {
         $this->file = $file;
+
+        return $this;
+    }
+
+    public function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Post $post): self
+    {
+        $this->post = $post;
 
         return $this;
     }

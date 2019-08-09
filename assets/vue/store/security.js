@@ -18,13 +18,16 @@ export default {
         ['AUTHENTICATION_SUCCESS'](state, payload) {
             state.isAuthenticated = true;
             state.username = payload.username;
-            console.log(payload);
         },
         ['LOG_OUT'](state, payload) {
             state.isAuthenticated = payload
         },
         ['ON_REFRESH'](state, payload) {
             state.isAuthenticated = payload
+        },
+        ['REGISTRATION_SUCCESS'](state, payload) {
+            state.isAuthenticated = !!payload.id;
+            state.username = payload.username;
         }
     },
     actions: {
@@ -39,6 +42,12 @@ export default {
         },
         logout ({commit}) {
             commit('LOG_OUT');
+        },
+        register ({commit}, payload) {
+            return SecurityAPI.register(payload)
+                .then(res =>
+                    commit('REGISTRATION_SUCCESS', JSON.parse(res.data))
+                )
         }
     },
 }

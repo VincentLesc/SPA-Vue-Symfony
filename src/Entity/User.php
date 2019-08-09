@@ -52,6 +52,11 @@ class User implements UserInterface
      */
     private $postMedia;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\UserProfile", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $userProfile;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -217,6 +222,23 @@ class User implements UserInterface
             if ($postMedium->getUploadedBy() === $this) {
                 $postMedium->setUploadedBy(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getUserProfile(): ?UserProfile
+    {
+        return $this->userProfile;
+    }
+
+    public function setUserProfile(UserProfile $userProfile): self
+    {
+        $this->userProfile = $userProfile;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $userProfile->getUser()) {
+            $userProfile->setUser($this);
         }
 
         return $this;

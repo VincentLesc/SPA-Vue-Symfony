@@ -43,6 +43,17 @@
                 v => !!v || 'Mot de passe obligatoire',
             ]
         }),
+        created() {
+          if (this.$store.getters['security/isAuthenticated']) {
+              this.$router.push('/home');
+              this.$notify({
+                  type: 'success',
+                  duration: 5000,
+                  closeOnClick : true,
+                  title: 'Vous êtes déjà connecté !',
+              })
+          }
+        },
         methods: {
             login(){
                 let data = {email: this.email, plainPassword: this.password};

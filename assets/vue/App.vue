@@ -1,7 +1,6 @@
 <template>
     <v-app
             id="inspire"
-            class="overflow-hidden"
             style="max-height: 100vh;"
     >
         <app-navigation-drawer
@@ -35,7 +34,7 @@
             'app-navigation-top': AppNavigationTopBar,
         },
         data: () => ({
-            drawer: true,
+            drawer: false,
         }),
         created () {
             this.$vuetify.theme.dark = true;
