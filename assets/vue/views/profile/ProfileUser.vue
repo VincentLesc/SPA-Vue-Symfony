@@ -17,11 +17,12 @@
                         <v-card-text>
                             <v-layout wrap row >
                                 <v-flex xs6 md4>
-                                    <input-image></input-image>
+                                    <input-media></input-media>
                                 </v-flex>
                                 <v-flex xs6 md4 v-for="image in images" :key="image.id">
-                                    <input-image :file="image.file" :id="image.id" :iser="image.isPublic" :image="image"></input-image>
-                                    <p v-if="image.isPublic">{{image.id}}</p>
+                                    <update-media :file="image.file" :id="image.id" :visibility="image.isPublic"></update-media>
+<!--                                    <input-image :file="image.file" :id="image.id" :iser="image.isPublic" :image="image"></input-image>
+                                    <p v-if="image.isPublic">{{image.id}}</p>-->
                                 </v-flex>
 
                             </v-layout>
@@ -43,7 +44,8 @@
     </v-container>
 </template>
 <script>
-    import InputImage from '../../components/app/forms/AppFormUploadImage';
+    import InputMedia from '../../components/app/forms/AppFormUploadMedia';
+    import UpdateMedia from "../../components/app/forms/AppFormUpdateMedia";
 
     export default {
         name: 'profile-user',
@@ -52,7 +54,8 @@
             age: '',
         }),
         components: {
-            'input-image' : InputImage
+            'input-media' : InputMedia,
+            'update-media' : UpdateMedia
         },
         methods: {
         },

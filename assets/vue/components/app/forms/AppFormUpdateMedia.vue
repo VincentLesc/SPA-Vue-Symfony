@@ -1,12 +1,21 @@
 <template>
-    <div class="text-center">
+    <div>
+        <v-img
+                :src="file"
+                class="mr-1 mb-1"
+                height="150"
+                @click.stop="dialog = true"
+        >
+            <div v-if="!visible" class="fill-height bottom-gradient">
+            <v-icon dark class="ma-1">mdi-eye-off</v-icon>
+            </div>
+        </v-img>
         <v-dialog
-                v-model="openDialog"
-                class="pa-0"
-                width="1000"
+                v-model="dialog"
+                max-width="1000"
         >
             <v-card>
-                <v-img :src="source" :id="id">
+                <v-img :src="file" :id="id">
                     <v-layout pa-2 row fill-height class="lightbox white--text">
                         <v-spacer></v-spacer>
                         <v-flex xs2 md1>
@@ -16,7 +25,7 @@
                                             class="ma-0 white--text"
                                             fab
                                             small
-                                            v-on:click="deletePicture"
+                                            @click="deletePicture"
                                     >
                                         <v-icon dark>mdi-delete</v-icon>
                                     </v-btn>
@@ -26,9 +35,10 @@
                                             class="ma-0 white--text"
                                             fab
                                             small
-                                            v-on:click="setVisibilityPicture"
+                                            @click="setVisibilityPicture"
                                     >
-                                        <v-icon dark>mdi-eye-off</v-icon>
+                                        <v-icon v-if="visible" dark>mdi-eye-off</v-icon>
+                                        <v-icon v-else style="color: red">mdi-eye-off</v-icon>
                                     </v-btn>
                                 </v-flex>
                             </v-layout>
@@ -41,38 +51,19 @@
 </template>
 
 <script>
-    import ProfileAPI from '../../api/profile';
+    import ProfileAPI from '../../../api/profile';
 
     export default {
-        name: "ProfileImageUpdate",
+        name: "AppFormUpdateMedia",
         props: {
-            dialog: Boolean,
             file: String,
             id: Number,
-            isPublic: Boolean,
-            image: Array
+            visibility: Boolean
         },
-        computed: {
-            openDialog : {
-                get: function () {
-                    return this.dialog;
-                },
-                set: function () {
-                    return !this.dialog;
-                }
-            },
-            source : {
-                get: function () {
-                    return this.file
-                }
-            },
-            visibility : {
-                get: function () {
-                    return this.isPublic
-                },
-                set: function () {
-                    return !this.isPublic
-                }
+        data () {
+            return {
+                dialog: false,
+                visible: this.visibility
             }
         },
         methods: {
@@ -80,20 +71,25 @@
                 this.$store.dispatch('profile/deleteProfilePicture', this.id)
             },
             setVisibilityPicture() {
-                this.isPublic = this.visibility;
+                console.log(this.visible);
+                this.isPublic = !this.visibility;
                 let payload = {
                     'id': this.id,
                     'isPublic': this.isPublic
                 };
                 ProfileAPI.updateProfilePicture(payload)
-
+                    .then( () => (this.dialog = false))
+                    .then( () => (this.visible = !this.visible))
             }
         },
-        created() {
-        }
     }
 </script>
 
 <style scoped>
-
+    .bottom-gradient {
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, black 70%);
+    }
+    .red {
+        color: red;
+    }
 </style>
