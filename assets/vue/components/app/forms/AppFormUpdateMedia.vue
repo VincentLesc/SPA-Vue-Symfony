@@ -7,7 +7,7 @@
                 @click.stop="dialog = true"
         >
             <div v-if="!visible" class="fill-height bottom-gradient">
-            <v-icon dark class="ma-1">mdi-eye-off</v-icon>
+                <v-icon dark class="ma-1">mdi-eye-off</v-icon>
             </div>
         </v-img>
         <v-dialog
@@ -27,7 +27,12 @@
                                             small
                                             @click="deletePicture"
                                     >
-                                        <v-icon dark>mdi-delete</v-icon>
+                                        <v-tooltip left>
+                                            <template v-slot:activator="{ on }">
+                                                <v-icon dark v-on="on">mdi-delete</v-icon>
+                                            </template>
+                                            <span>Supprimer</span>
+                                        </v-tooltip>
                                     </v-btn>
                                 </v-flex>
                                 <v-flex xs12 class="mt-5">
@@ -37,8 +42,14 @@
                                             small
                                             @click="setVisibilityPicture"
                                     >
-                                        <v-icon v-if="visible" dark>mdi-eye-off</v-icon>
-                                        <v-icon v-else style="color: red">mdi-eye-off</v-icon>
+                                        <v-tooltip left>
+                                            <template v-slot:activator="{ on }">
+                                                <v-icon v-if="visible" dark v-on="on">mdi-eye-off</v-icon>
+                                                <v-icon v-else style="color: red" v-on="on">mdi-eye-off</v-icon>
+                                            </template>
+                                            <span v-if="visible">Photo publique</span>
+                                            <span v-else>Photo privée</span>
+                                        </v-tooltip>
                                     </v-btn>
                                 </v-flex>
                             </v-layout>
@@ -80,6 +91,12 @@
                 ProfileAPI.updateProfilePicture(payload)
                     .then( () => (this.dialog = false))
                     .then( () => (this.visible = !this.visible))
+                    .then( () => ( this.$notify({
+                        type: 'success',
+                        duration: 1000,
+                        closeOnClick : true,
+                        title: 'Modification enregistrée !',
+                    })))
             }
         },
     }
