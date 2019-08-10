@@ -61,7 +61,6 @@
             },
             mediaUploaded(media) {
                 this.mediaId = JSON.parse(media.data).id;
-                console.log(this.mediaId);
                 return this.media = JSON.parse(media.data).file;
             }
         }

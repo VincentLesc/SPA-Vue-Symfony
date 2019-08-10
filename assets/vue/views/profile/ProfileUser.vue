@@ -64,7 +64,6 @@
         },
         computed : {
             images() {
-                console.log(this.$store.getters['profile/getImages']);
                 return this.$store.getters['profile/getImages'];
             }
         }

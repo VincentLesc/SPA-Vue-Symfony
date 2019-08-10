@@ -82,7 +82,6 @@
                 this.$store.dispatch('profile/deleteProfilePicture', this.id)
             },
             setVisibilityPicture() {
-                console.log(this.visible);
                 this.isPublic = !this.visibility;
                 let payload = {
                     'id': this.id,
