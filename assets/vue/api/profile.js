@@ -25,5 +25,11 @@ export default {
             '/api/profile/media/'+payload.id,
             payload
         )
+    },
+    updateProfile(payload) {
+        return axios.put(
+            '/api/profile/update',
+            payload
+        )
     }
 }

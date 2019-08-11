@@ -29,6 +29,12 @@ class UserProfile
      */
     private $userProfileMedia;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\UserProfileMedia", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $mainPicture;
+
     public function __construct()
     {
         $this->userProfileMedia = new ArrayCollection();
@@ -78,6 +84,18 @@ class UserProfile
                 $userProfileMedium->setProfile(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMainPicture(): ?UserProfileMedia
+    {
+        return $this->mainPicture;
+    }
+
+    public function setMainPicture(?UserProfileMedia $mainPicture): self
+    {
+        $this->mainPicture = $mainPicture;
 
         return $this;
     }

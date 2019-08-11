@@ -9,6 +9,9 @@
             <div v-if="!visible" class="fill-height bottom-gradient">
                 <v-icon dark class="ma-1">mdi-eye-off</v-icon>
             </div>
+            <div v-if="isMain" class="fill-height">
+                <v-icon dark class="ma-1">mdi-account-box</v-icon>
+            </div>
         </v-img>
         <v-dialog
                 v-model="dialog"
@@ -35,7 +38,7 @@
                                         </v-tooltip>
                                     </v-btn>
                                 </v-flex>
-                                <v-flex xs12 class="mt-5">
+                                <v-flex xs12 class="mt-5" v-if="!isMain">
                                     <v-btn
                                             class="ma-0 white--text"
                                             fab
@@ -50,6 +53,23 @@
                                             <span v-if="visible">Photo publique</span>
                                             <span v-else>Photo privée</span>
                                         </v-tooltip>
+                                    </v-btn>
+                                </v-flex>
+                                <v-flex xs12 class="mt-5" v-if="visible">
+                                    <v-btn
+                                            class="ma-0 white--text"
+                                            fab
+                                            small
+                                            @click="setMainProfilePicture"
+                                    >
+                                        <v-tooltip left>
+                                            <template v-slot:activator="{ on }">
+                                                <v-icon dark v-if="isMain" v-on="on" style="color: green">mdi-account-box</v-icon>
+                                                <v-icon dark v-else v-on="on">mdi-account-box</v-icon>
+                                            </template>
+                                            <span>Définir comme photo principale</span>
+                                        </v-tooltip>
+
                                     </v-btn>
                                 </v-flex>
                             </v-layout>
@@ -69,17 +89,20 @@
         props: {
             file: String,
             id: Number,
-            visibility: Boolean
+            visibility: Boolean,
+            isMain: Boolean
         },
         data () {
             return {
                 dialog: false,
-                visible: this.visibility
+                visible: this.visibility,
+                mainPicture: this.isMain
             }
         },
         methods: {
             deletePicture() {
-                this.$store.dispatch('profile/deleteProfilePicture', this.id)
+                this.dialog = false;
+                this.$store.dispatch('profile/deleteProfilePicture', this.id);
             },
             setVisibilityPicture() {
                 this.isPublic = !this.visibility;
@@ -88,7 +111,6 @@
                     'isPublic': this.isPublic
                 };
                 ProfileAPI.updateProfilePicture(payload)
-                    .then( () => (this.dialog = false))
                     .then( () => (this.visible = !this.visible))
                     .then( () => ( this.$notify({
                         type: 'success',
@@ -96,6 +118,19 @@
                         closeOnClick : true,
                         title: 'Modification enregistrée !',
                     })))
+            },
+            setMainProfilePicture() {
+                let payload = {
+                    'mainPicture': this.isMain ? null : this.id
+                };
+                this.$store.dispatch('profile/updateProfileMainPicture', payload)
+                    .then(
+                this.$notify({
+                    type: 'success',
+                    duration: 1000,
+                    closeOnClick : true,
+                    title: 'Modification enregistrée !',
+                }))
             }
         },
     }

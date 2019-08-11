@@ -1,5 +1,5 @@
 <template>
-    <v-container  class="overflow-auto pa-0" style="max-height: 80vh">
+    <v-container  class="overflow-auto pa-0" style="max-height: 90vh">
         <v-flex grid-list-xl>
             <v-layout
                     align-start
@@ -19,10 +19,13 @@
                                 <v-flex xs6 md4>
                                     <input-media></input-media>
                                 </v-flex>
-                                <v-flex xs6 md4 v-for="image in images" :key="image.id">
-                                    <update-media :file="image.file" :id="image.id" :visibility="image.isPublic"></update-media>
-<!--                                    <input-image :file="image.file" :id="image.id" :iser="image.isPublic" :image="image"></input-image>
-                                    <p v-if="image.isPublic">{{image.id}}</p>-->
+                                <v-flex xs6 md4 v-for="image in img" :key="image.id">
+                                    <update-media
+                                            :file="image.file"
+                                            :id="image.id"
+                                            :visibility="image.isPublic"
+                                            :is-main="mainPicture(image.id)"
+                                    ></update-media>
                                 </v-flex>
 
                             </v-layout>
@@ -52,18 +55,20 @@
         data: () => ({
             title: '',
             age: '',
+            images: []
         }),
         components: {
             'input-media' : InputMedia,
             'update-media' : UpdateMedia
         },
         methods: {
+            mainPicture(id) {
+                let main = this.$store.getters['profile/getMainPicture'];
+                return main !== null && main.id === id;
+            },
         },
-        created() {
-            this.$store.dispatch('profile/loadProfile');
-        },
-        computed : {
-            images() {
+        computed: {
+            img() {
                 return this.$store.getters['profile/getImages'];
             }
         }

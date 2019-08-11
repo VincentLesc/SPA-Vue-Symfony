@@ -1,21 +1,40 @@
 import ProfileAPI from "../api/profile";
+import component from "vuetify/lib/util/component";
 
 export default {
     namespaced: true,
     state: {
-        images : []
+        images : [],
+        mainPicture: '',
+        isLoading: false
     },
     getters: {
-      getImages(state) {
-          return state.images;
+        getImages(state) {
+            return state.images;
+        },
+        getMainPicture(state) {
+            return state.mainPicture;
+        },
+        getIsLoading(state) {
+            return state.isLoading;
         }
     },
     mutations: {
+        ['LOADING'](state, payload) {
+            state.isLoading = true;
+        },
         ['LOAD_SUCCESS'](state, payload) {
             state.images = payload.userProfileMedia;
+            state.mainPicture = payload.mainPicture;
+            state.isLoading = false;
         },
         ['IMAGE_UPLOAD_SUCCESS'](state, payload) {
             state.images.unshift(payload);
+            state.isLoading = false;
+        },
+        ['MAIN_PICTURE_UPDATED'](state, payload) {
+            state.mainPicture = payload.mainPicture;
+            state.isLoading = false;
         },
         ['IMAGE_DELETE_SUCCESS'](state, payload) {
             state.images = state.images.filter(
@@ -27,6 +46,7 @@ export default {
                     }
                 }
             );
+            state.isLoading = false;
         }
     },
     actions: {
@@ -36,13 +56,22 @@ export default {
                     commit('LOAD_SUCCESS', JSON.parse(res.data))
                 )
         },
+        updateProfileMainPicture({commit},payload) {
+            return ProfileAPI.updateProfile(payload)
+                .then(res =>
+                    commit('LOAD_SUCCESS', JSON.parse(res.data))
+                )
+        }
+        ,
         addProfilePicture({commit}, payload) {
+            commit('LOADING');
             return ProfileAPI.addProfilePicture(payload)
                 .then( res => commit('IMAGE_UPLOAD_SUCCESS', JSON.parse(res.data)))
         },
         deleteProfilePicture({commit}, payload) {
             return ProfileAPI.removeProfilePicture(payload)
                 .then( res => commit('IMAGE_DELETE_SUCCESS', res))
+
         }
     }
 }

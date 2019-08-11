@@ -4,7 +4,9 @@
 namespace App\Controller\Api;
 
 
+use App\Entity\UserProfile;
 use App\Entity\UserProfileMedia;
+use App\Repository\UserProfileMediaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,7 +67,8 @@ class ApiProfileController extends AbstractController
             'json', [
                 'attributes' => [
                     'id',
-                    'userProfileMedia'
+                    'userProfileMedia',
+                    'mainPicture'
                 ]
             ]
         );
@@ -168,14 +171,14 @@ class ApiProfileController extends AbstractController
 
     /**
      * @Route("api/profile/media/{media}", name="update_profile_media", methods={"PUT"})
+     *
      * @param UserProfileMedia $media
      * @param Request $request
+     * @return JsonResponse
      */
     public function updateProfileMedia(UserProfileMedia $media, Request $request)
     {
-        dump($media);
         $data = json_decode($request->getContent());
-        dump($data);
         if (isset($data->isPublic)) {
             $media->setIsPublic($data->isPublic);
         }
@@ -184,5 +187,69 @@ class ApiProfileController extends AbstractController
         $this->em->flush();
 
         return $this->json($data, 200);
+    }
+
+    /**
+     * @Route("api/profile/update", name="update_profile", methods={"PUT"})
+     * @param Request $request
+     * @param UserProfileMediaRepository $mediaRepository
+     * @return JsonResponse
+     * @throws ExceptionInterface
+     */
+    public function updateProfile(Request $request, UserProfileMediaRepository $mediaRepository)
+    {
+        /** @var UserProfile $profile */
+        $profile = $this->getUser()->getUserProfile();
+        $data = json_decode($request->getContent());
+        if ($data->mainPicture !== null) {
+            $mainPicture = $mediaRepository->find($data->mainPicture);
+        } else {
+            $mainPicture = null;
+        }
+        $profile->setMainPicture($mainPicture);
+
+        $this->em->persist($profile);
+        $this->em->flush();
+
+        $callbackDatetime = function ($innerObject) {
+            return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
+        };
+        $callbackFile = function ($filename) {
+            return $this->getParameter('public_user_profile_media_directory') . '/' . $filename;
+        };
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+                return [
+                    'id' => $object->getId(),
+                ];
+            },
+            AbstractNormalizer::CALLBACKS => [
+                'createdAt' => $callbackDatetime,
+                'file' => $callbackFile
+            ],
+        ];
+        $encoders = [new JsonEncoder()];
+        $normalizer = new ObjectNormalizer(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $defaultContext
+        );
+        $serializer = new Serializer([$normalizer], $encoders);
+        $data = $serializer->normalize($profile,
+            'json', [
+                'attributes' => [
+                    'id',
+                    'userProfileMedia',
+                    'mainPicture'
+                ]
+            ]
+        );
+        $data = $serializer->serialize($data, 'json');
+
+        return $this->json($data);
     }
 }
