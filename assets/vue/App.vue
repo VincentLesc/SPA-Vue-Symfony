@@ -39,7 +39,9 @@
         created () {
             this.$vuetify.theme.dark = true;
             let isAuthenticated = JSON.parse(this.$parent.$el.attributes['data-is-authenticated'].value);
-            return this.$store.dispatch('security/onRefreshAuthentication', isAuthenticated)
+            this.$store.dispatch('security/onRefreshAuthentication', isAuthenticated)
+                .then(()=>(this.$store.dispatch('profile/loadProfile')))
+
         }
     }
 </script>
