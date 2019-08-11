@@ -3,12 +3,7 @@
             id="inspire"
             style="max-height: 100vh;"
     >
-        <app-navigation-drawer
-                v-if="drawer"
-        >
-        </app-navigation-drawer>
         <app-navigation-top
-                v-on:switch-drawer="drawer = !drawer"
         >
         </app-navigation-top>
         <notifications></notifications>
@@ -21,7 +16,6 @@
 
 <script>
     import AppFooter from './components/app/AppFooter';
-    import AppNavigationDrawer from './components/app/AppNavigationDrawer';
     import AppNavigationTopBar from './components/app/AppNavigationTopBar';
 
     export default {
@@ -30,12 +24,8 @@
         },
         components: {
             'app-footer': AppFooter,
-            'app-navigation-drawer': AppNavigationDrawer,
             'app-navigation-top': AppNavigationTopBar,
         },
-        data: () => ({
-            drawer: false,
-        }),
         created () {
             this.$vuetify.theme.dark = true;
             let isAuthenticated = JSON.parse(this.$parent.$el.attributes['data-is-authenticated'].value);
