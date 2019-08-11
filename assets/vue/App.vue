@@ -37,7 +37,6 @@
             drawer: false,
         }),
         created () {
-            this.$store.dispatch('profile/loadProfile');
             this.$vuetify.theme.dark = true;
             let isAuthenticated = JSON.parse(this.$parent.$el.attributes['data-is-authenticated'].value);
             return this.$store.dispatch('security/onRefreshAuthentication', isAuthenticated)

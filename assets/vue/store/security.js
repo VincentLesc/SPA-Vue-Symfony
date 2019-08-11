@@ -42,6 +42,7 @@ export default {
         },
         logout ({commit}) {
             commit('LOG_OUT');
+            document.location.reload(true);
         },
         register ({commit}, payload) {
             return SecurityAPI.register(payload)

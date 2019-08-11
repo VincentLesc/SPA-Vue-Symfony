@@ -59,6 +59,7 @@
                 let data = {email: this.email, plainPassword: this.password};
                 this.$store.dispatch('security/login', data)
                     .then(() => this.$router.push('/home'))
+                    .then(()=>(this.$store.dispatch('profile/loadProfile')))
                     .then(() => this.$notify({
                         type: 'success',
                         duration: 5000,
