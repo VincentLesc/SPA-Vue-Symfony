@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Tutorial for a single page application with Symfony and Vue.js">
+        <meta name="author" content="Vincent Leschaeve">
+        <title>{% block title %}Symfony-Vue SPA{% endblock %}</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+              rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.materialdesignicons.com/3.8.95/css/materialdesignicons.min.css">
+        {{ encore_entry_link_tags('app') }}
+
+    </head>
+    <body style="overflow-y: hidden; max-height: 100vh">
+        <div
+                id="app"
+                data-is-authenticated="{{ isAuthenticated }}"
+
+        ></div>
+        {{ encore_entry_script_tags('app') }}
+    </body>
+</html>
