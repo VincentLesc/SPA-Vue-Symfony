@@ -5,6 +5,9 @@ export default {
     state: {
         images : [],
         mainPicture: '',
+        title: '',
+        description: '',
+        age: '',
         isLoading: false
     },
     getters: {
@@ -16,6 +19,15 @@ export default {
         },
         getIsLoading(state) {
             return state.isLoading;
+        },
+        getTitle(state) {
+            return state.title;
+        },
+        getDescription(state) {
+            return state.description;
+        },
+        getAge(state) {
+            return state.age;
         }
     },
     mutations: {
@@ -26,6 +38,9 @@ export default {
             state.images = payload.userProfileMedia;
             state.mainPicture = payload.mainPicture;
             state.isLoading = false;
+            state.age = payload.age;
+            state.title = payload.title;
+            state.description = payload.description;
         },
         ['IMAGE_UPLOAD_SUCCESS'](state, payload) {
             state.images.unshift(payload);
@@ -55,7 +70,8 @@ export default {
                     commit('LOAD_SUCCESS', JSON.parse(res.data))
                 )
         },
-        updateProfileMainPicture({commit},payload) {
+        updateProfile({commit},payload) {
+            commit('LOADING');
             return ProfileAPI.updateProfile(payload)
                 .then(res =>
                     commit('LOAD_SUCCESS', JSON.parse(res.data))

@@ -19,6 +19,18 @@ class UserProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, UserProfile::class);
     }
 
+    public function findRecentUsers($excludeId)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user != :val')
+            ->setParameter('val', $excludeId)
+            ->orderBy('p.id', 'DESC')
+            ->setMaxResults(50)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return UserProfile[] Returns an array of UserProfile objects
     //  */

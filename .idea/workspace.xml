@@ -3,6 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="6f1042ae-a22a-46de-8e54-0a2d5e2b28a3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vue/components/app/forms/AppFormUpdateMedia.vue" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vue/components/app/forms/AppFormUpdateMedia.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vue/components/app/forms/AppFormUploadMedia.vue" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vue/components/app/forms/AppFormUploadMedia.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vue/components/profile/ProfileUserForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vue/components/profile/ProfileUserForm.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vue/store/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vue/store/profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vue/views/profile/ProfileIndex.vue" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vue/views/profile/ProfileIndex.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vue/views/profile/ProfileUser.vue" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vue/views/profile/ProfileUser.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Api/ApiProfileController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Api/ApiProfileController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/UserProfile.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/UserProfile.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/UserProfileRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/UserProfileRepository.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -172,6 +181,14 @@
       <updated>1563953453628</updated>
       <workItem from="1563953455106" duration="13825000" />
     </task>
+    <task id="LOCAL-00001" summary="Add meta for route security.">
+      <created>1565632615236</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1565632615236</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -191,10 +208,16 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add meta for route security." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add meta for route security." />
   </component>
 </project>

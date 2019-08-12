@@ -121,9 +121,9 @@
             },
             setMainProfilePicture() {
                 let payload = {
-                    'mainPicture': this.isMain ? null : this.id
+                    'mainPicture': this.id
                 };
-                this.$store.dispatch('profile/updateProfileMainPicture', payload)
+                this.$store.dispatch('profile/updateProfile', payload)
                     .then(
                 this.$notify({
                     type: 'success',

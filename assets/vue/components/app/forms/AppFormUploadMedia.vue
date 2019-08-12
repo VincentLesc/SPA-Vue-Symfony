@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <v-img
                 :src="defaultFile"
                 class="mr-1 mb-1"
@@ -30,7 +29,6 @@
         props: ['file', 'id'],
         computed: {
             isLoading() {
-                console.log(this.$store.getters['profile/getIsLoading']);
                 return this.$store.getters['profile/getIsLoading']
             }
         },
