@@ -35,35 +35,7 @@ class ApiProfileController extends AbstractController
      */
     public function getUserProfile() {
         $profile = $this->getUser()->getUserProfile();
-        $callbackDatetime = function ($innerObject) {
-            return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
-        };
-        $callbackFile = function ($filename) {
-            return $this->getParameter('public_user_profile_media_directory') . '/' . $filename;
-        };
-        $defaultContext = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
-                return [
-                    'id' => $object->getId(),
-                ];
-            },
-            AbstractNormalizer::CALLBACKS => [
-                'createdAt' => $callbackDatetime,
-                'file' => $callbackFile
-            ],
-        ];
-        $encoders = [new JsonEncoder()];
-        $normalizer = new ObjectNormalizer(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $defaultContext
-        );
-        $serializer = new Serializer([$normalizer], $encoders);
-        $data = $serializer->normalize($profile,
+        $data = $this->__serializer()->normalize($profile,
             'json', [
                 'attributes' => [
                     'id',
@@ -72,7 +44,7 @@ class ApiProfileController extends AbstractController
                 ]
             ]
         );
-        $data = $serializer->serialize($data, 'json');
+        $data = $this->__serializer()->serialize($data, 'json');
 
         return $this->json($data);
 
@@ -102,36 +74,7 @@ class ApiProfileController extends AbstractController
         $this->em->persist($media);
         $this->em->flush();
 
-
-        $callbackDatetime = function ($innerObject) {
-            return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
-        };
-        $callbackFile = function ($filename) {
-            return $this->getParameter('public_user_profile_media_directory') . '/' . $filename;
-        };
-        $defaultContext = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
-                return [
-                    'id' => $object->getId(),
-                ];
-            },
-            AbstractNormalizer::CALLBACKS => [
-                'createdAt' => $callbackDatetime,
-                'file' => $callbackFile
-            ],
-        ];
-        $encoders = [new JsonEncoder()];
-        $normalizer = new ObjectNormalizer(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $defaultContext
-        );
-        $serializer = new Serializer([$normalizer], $encoders);
-        $data = $serializer->normalize($media,
+        $data = $this->__serializer()->normalize($media,
             'json', [
                 'attributes' => [
                     'id',
@@ -140,7 +83,7 @@ class ApiProfileController extends AbstractController
                 ]
             ]
         );
-        $data = $serializer->serialize($data, 'json');
+        $data = $this->__serializer()->serialize($data, 'json');
 
         return $this->json($data);
     }
@@ -156,6 +99,9 @@ class ApiProfileController extends AbstractController
         if ($media->getProfile()->getUser() !== $this->getUser()) {
             return $this->json('Not Allowed', 401);
         };
+        if ($media->getProfile()->getMainPicture() === $media) {
+            return $this->json('Not Allowed', 401);
+        }
         $id = $media->getId();
         $filename = $media->getFile();
         $this->em->remove($media);
@@ -211,6 +157,55 @@ class ApiProfileController extends AbstractController
         $this->em->persist($profile);
         $this->em->flush();
 
+
+        $data = $this->__serializer()->normalize($profile,
+            'json', [
+                'attributes' => [
+                    'id',
+                    'userProfileMedia',
+                    'mainPicture'
+                ]
+            ]
+        );
+        $data = $this->__serializer()->serialize($data, 'json');
+
+        return $this->json($data);
+    }
+
+    /**
+     * @Route("api/profile/all", name="get_all_public_profile", methods={"GET"})
+     * @return JsonResponse
+     * @throws ExceptionInterface
+     */
+    public function getAllPublicProfile()
+    {
+        $profiles = $this->em->getRepository(UserProfile::class)
+            ->findAll();
+
+        $data = $this->__serializer()->normalize($profiles,
+            'json',
+            [
+                'attributes' => [
+                    'id',
+                    'mainPicture' => [
+                        'file'
+                    ]
+                ]
+            ]
+        );
+        $data = $this->__serializer()->serialize($data, 'json');
+
+        return $this->json($data);
+    }
+
+
+    /**
+     * Set the serializer for Profile Entity
+     *
+     * @return Serializer
+     */
+    private function __serializer()
+    {
         $callbackDatetime = function ($innerObject) {
             return $innerObject instanceof \DateTime ? $innerObject->format(\DateTime::ISO8601) : '';
         };
@@ -238,18 +233,6 @@ class ApiProfileController extends AbstractController
             null,
             $defaultContext
         );
-        $serializer = new Serializer([$normalizer], $encoders);
-        $data = $serializer->normalize($profile,
-            'json', [
-                'attributes' => [
-                    'id',
-                    'userProfileMedia',
-                    'mainPicture'
-                ]
-            ]
-        );
-        $data = $serializer->serialize($data, 'json');
-
-        return $this->json($data);
+        return $serializer = new Serializer([$normalizer], $encoders);
     }
 }

@@ -5,7 +5,7 @@
             <v-icon>mdi-newspaper</v-icon>
         </v-btn>
 
-        <v-btn value="favorites">
+        <v-btn value="favorites" to="/community">
             <span>Favorites</span>
             <v-icon>favorite</v-icon>
         </v-btn>

@@ -31,5 +31,10 @@ export default {
             '/api/profile/update',
             payload
         )
+    },
+    getAllPublicProfile() {
+        return axios.get(
+            '/api/profile/all'
+        )
     }
 }

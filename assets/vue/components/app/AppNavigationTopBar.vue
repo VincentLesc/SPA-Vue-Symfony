@@ -71,8 +71,9 @@
                 return this.$store.getters['security/isAuthenticated']
             },
             mainProfilePicture () {
-                console.log(this.$store.getters['profile/getMainPicture'].file);
-                return this.$store.getters['profile/getMainPicture'].file
+                return this.$store.getters['profile/getMainPicture'] ?
+                    this.$store.getters['profile/getMainPicture'].file :
+                    require('../../../images/image-placeholder-350x350.png');
             }
         },
         methods: {

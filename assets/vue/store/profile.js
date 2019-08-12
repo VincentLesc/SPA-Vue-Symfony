@@ -1,5 +1,4 @@
 import ProfileAPI from "../api/profile";
-import component from "vuetify/lib/util/component";
 
 export default {
     namespaced: true,
