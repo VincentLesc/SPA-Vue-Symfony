@@ -15,13 +15,13 @@ Vue.use(VueRouter);
 let router = new VueRouter({
     mode: 'history',
     routes: [
-        { path: '/blog', component: Blog},
-        { path: '/blog/new', component: BlogNew},
+        { path: '/blog', component: Blog, meta: {requiresAuth: true}},
+        { path: '/blog/new', component: BlogNew, meta: {requiresAuth: true}},
         { path: '/user/profile', component: ProfileUser, meta: {requiresAuth: true}},
         { path: '/community', component: ProfileIndex, meta: {requiresAuth: true}},
         { path: '/login', component: SecurityLogin},
         { path: '/register', component: SecurityRegister},
-        { path: '/*', component: Home}
+        { path: '/*', component: Home, meta: {requiresAuth: true}}
     ],
 });
 
