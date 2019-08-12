@@ -1,15 +1,16 @@
 <template>
-    <v-container fluid grid-list-sm style="max-height: 85vh" class="overflow-auto">
+    <v-container grid-list-sm style="max-height: 85vh" class="overflow-auto">
         <v-layout wrap>
             <v-flex
                     v-for="profile in profiles"
                     :key="profile.id"
                     xs4
-                    md3
+                    md2
             >
                 <v-card elevation="5" tile>
                     <v-img
-                            height="120"
+                            :id="setImgId(profile.id)"
+                            :height="200"
                             :src="getImage(profile.mainPicture)"
                     ></v-img>
                 </v-card>
@@ -38,7 +39,10 @@
                 } else {
                     return value.file;
                 }
-            }
+            },
+            setImgId(value) {
+                return "profile-img-" + value;
+            },
         }
     }
 </script>

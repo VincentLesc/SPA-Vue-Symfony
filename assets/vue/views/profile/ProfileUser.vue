@@ -37,7 +37,11 @@
                             Informations
                         </v-card-title>
                         <v-card-text>
-                            <profile-user-form :switch="false"></profile-user-form>
+                            <profile-user-form
+                                    :title="title"
+                                    :description="description"
+                                    :age="age"
+                            ></profile-user-form>
                         </v-card-text>
                     </v-card>
                 </v-flex>
@@ -59,11 +63,6 @@
 
     export default {
         name: 'profile-user',
-        data: () => ({
-            title: '',
-            age: '',
-            images: []
-        }),
         components: {
             'input-media' : InputMedia,
             'update-media' : UpdateMedia,
@@ -78,6 +77,15 @@
         computed: {
             img() {
                 return this.$store.getters['profile/getImages'];
+            },
+            title() {
+                return this.$store.getters['profile/getTitle'];
+            },
+            description() {
+                return this.$store.getters['profile/getDescription'];
+            },
+            age() {
+                return this.$store.getters['profile/getAge'];
             }
         }
     }

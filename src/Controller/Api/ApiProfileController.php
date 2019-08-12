@@ -40,7 +40,10 @@ class ApiProfileController extends AbstractController
                 'attributes' => [
                     'id',
                     'userProfileMedia',
-                    'mainPicture'
+                    'mainPicture',
+                    'title',
+                    'description',
+                    'age'
                 ]
             ]
         );
@@ -147,12 +150,20 @@ class ApiProfileController extends AbstractController
         /** @var UserProfile $profile */
         $profile = $this->getUser()->getUserProfile();
         $data = json_decode($request->getContent());
-        if ($data->mainPicture !== null) {
+        if (isset($data->mainPicture)) {
             $mainPicture = $mediaRepository->find($data->mainPicture);
-        } else {
-            $mainPicture = null;
+            if ( $mainPicture !== $profile->getMainPicture()) {
+                $mainPicture = $mediaRepository->find($data->mainPicture);
+            } else {
+                $mainPicture = null;
+            }
+            $profile->setMainPicture($mainPicture);
         }
-        $profile->setMainPicture($mainPicture);
+        if (isset($data->title)) {
+            $profile->setTitle($data->title);
+            $profile->setDescription($data->description);
+            $profile->setAge($data->age);
+        }
 
         $this->em->persist($profile);
         $this->em->flush();
@@ -163,7 +174,10 @@ class ApiProfileController extends AbstractController
                 'attributes' => [
                     'id',
                     'userProfileMedia',
-                    'mainPicture'
+                    'mainPicture',
+                    'title',
+                    'description',
+                    'age'
                 ]
             ]
         );
@@ -180,7 +194,7 @@ class ApiProfileController extends AbstractController
     public function getAllPublicProfile()
     {
         $profiles = $this->em->getRepository(UserProfile::class)
-            ->findAll();
+            ->findRecentUsers($this->getUser());
 
         $data = $this->__serializer()->normalize($profiles,
             'json',
