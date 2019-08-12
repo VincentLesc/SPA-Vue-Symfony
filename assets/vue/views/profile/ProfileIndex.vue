@@ -7,7 +7,7 @@
                     xs4
                     md3
             >
-                <v-card flat tile>
+                <v-card elevation="5" tile>
                     <v-img
                             height="120"
                             :src="getImage(profile.mainPicture)"

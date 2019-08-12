@@ -1,5 +1,5 @@
 <template>
-    <v-container  class="overflow-auto pa-0" style="max-height: 90vh">
+    <v-container  class="overflow-auto pa-0" style="max-height: 85vh">
         <v-flex grid-list-xl>
             <v-layout
                     align-start
@@ -9,7 +9,7 @@
                     ma-0
                     class="overflow-auto"
             >
-                <v-flex xs12 md5>
+                <v-flex xs12 md4>
                     <v-card class="ma-1">
                         <v-card-title>
                             Images
@@ -27,19 +27,25 @@
                                             :is-main="mainPicture(image.id)"
                                     ></update-media>
                                 </v-flex>
-
                             </v-layout>
                         </v-card-text>
                     </v-card>
                 </v-flex>
-                <v-flex xs12 md5>
+                <v-flex xs12 md4>
                     <v-card class="ma-1">
                         <v-card-title>
                             Informations
                         </v-card-title>
                         <v-card-text>
-                            Mon texte
+                            <profile-user-form :switch="false"></profile-user-form>
                         </v-card-text>
+                    </v-card>
+                </v-flex>
+                <v-flex xs12 md4>
+                    <v-card class="ma-1">
+                        <v-card-title>
+                            Localisation
+                        </v-card-title>
                     </v-card>
                 </v-flex>
             </v-layout>
@@ -49,6 +55,7 @@
 <script>
     import InputMedia from '../../components/app/forms/AppFormUploadMedia';
     import UpdateMedia from "../../components/app/forms/AppFormUpdateMedia";
+    import ProfileUserForm from "../../components/profile/ProfileUserForm";
 
     export default {
         name: 'profile-user',
@@ -59,7 +66,8 @@
         }),
         components: {
             'input-media' : InputMedia,
-            'update-media' : UpdateMedia
+            'update-media' : UpdateMedia,
+            'profile-user-form': ProfileUserForm
         },
         methods: {
             mainPicture(id) {
