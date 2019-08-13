@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Validator\Exception\ValidatorException;
+use Symfony\Component\Validator\Validation;
 
 class SecurityController extends AbstractController
 {
@@ -43,8 +45,10 @@ class SecurityController extends AbstractController
         $serializer = new Serializer([$normalizer], $encoders);
 
         $user = $serializer->deserialize($data, 'App\Entity\User', 'json');
+
         $em->persist($user);
         $em->flush();
+
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->container->get('security.token_storage')->setToken($token);

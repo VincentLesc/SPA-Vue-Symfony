@@ -74,6 +74,9 @@ class ApiProfileController extends AbstractController
             ->setCreatedAt(new \DateTime('now'))
             ->setProfile($this->getUser()->getUserProfile());
 
+        $validator = $this->get('validator');
+        dump($validator);
+
         $this->em->persist($media);
         $this->em->flush();
 
