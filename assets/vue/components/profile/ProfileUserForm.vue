@@ -3,6 +3,7 @@
         <v-flex xs12>
             <v-text-field
                     v-model="displayedTitle"
+                    v-on:keyup="typing"
                     label="Titre du profil"
                     counter="16"
                     append-outer-icon="place"
@@ -12,6 +13,7 @@
         <v-flex xs12>
             <v-textarea
                     v-model="displayedDescription"
+                    v-on:keyup="isFilling"
                     label="Description"
                     auto-grow
                     clearable
@@ -20,6 +22,7 @@
         <v-flex xs6>
             <v-select
                     v-model="displayedAge"
+                    v-on:keyup="isFilling"
                     :items="ageRange"
                     label="Age"
             ></v-select>
@@ -33,11 +36,18 @@
         </v-flex>
         <v-spacer></v-spacer>
         <v-flex xs6 offset-6>
-                <v-btn
-                        width="100%"
-                        v-on:click="submit"
-                        :loading="isLoading"
-                >Enregistrer</v-btn>
+            <v-btn
+                    width="100%"
+                    v-on:click="submit"
+                    :loading="isLoading"
+                    v-if="!hasError"
+            >Enregistrer</v-btn>
+            <v-btn
+                    width="100%"
+                    v-on:click="submit"
+                    v-if="hasError"
+                    color="red"
+            >Réessayer</v-btn>
         </v-flex>
     </v-layout>
 </template>
@@ -72,6 +82,12 @@
             },
             isLoading() {
                 return this.$store.getters['profile/getIsLoading'];
+            },
+            hasError() {
+                return this.$store.getters['profile/getHasError'];
+            },
+            isFilling() {
+                return this.$store.getters['profile/getIsTyping'];
             }
         },
         methods: {
@@ -82,6 +98,9 @@
                     age: this.displayedAge
                 };
                 this.$store.dispatch('profile/updateProfile', payload)
+            },
+            typing() {
+                this.$store.dispatch('profile/fillingForm')
             }
         }
     }

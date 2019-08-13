@@ -8,7 +8,9 @@ export default {
         title: '',
         description: '',
         age: '',
-        isLoading: false
+        isLoading: false,
+        hasError: false,
+        isTyping: false,
     },
     getters: {
         getImages(state) {
@@ -28,11 +30,26 @@ export default {
         },
         getAge(state) {
             return state.age;
+        },
+        getHasError(state) {
+            return state.hasError;
+        },
+        getIsTyping(state) {
+            return state.isTyping;
         }
     },
     mutations: {
         ['LOADING'](state, payload) {
             state.isLoading = true;
+            state.hasError = false;
+        },
+        ['ERROR'](state) {
+            state.hasError = true;
+        },
+        ['TYPING'](state) {
+            state.isTyping = true;
+            state.hasError = false;
+            state.isLoading = false;
         },
         ['LOAD_SUCCESS'](state, payload) {
             state.images = payload.userProfileMedia;
@@ -41,14 +58,17 @@ export default {
             state.age = payload.age;
             state.title = payload.title;
             state.description = payload.description;
+            state.hasError = false;
         },
         ['IMAGE_UPLOAD_SUCCESS'](state, payload) {
             state.images.unshift(payload);
             state.isLoading = false;
+            state.hasError = true;
         },
         ['MAIN_PICTURE_UPDATED'](state, payload) {
             state.mainPicture = payload.mainPicture;
             state.isLoading = false;
+            state.hasError = false;
         },
         ['IMAGE_DELETE_SUCCESS'](state, payload) {
             state.images = state.images.filter(
@@ -61,6 +81,7 @@ export default {
                 }
             );
             state.isLoading = false;
+            state.hasError = false;
         }
     },
     actions: {
@@ -69,6 +90,7 @@ export default {
                 .then(res =>
                     commit('LOAD_SUCCESS', JSON.parse(res.data))
                 )
+                .catch(commit('ERROR'))
         },
         updateProfile({commit},payload) {
             commit('LOADING');
@@ -76,17 +98,22 @@ export default {
                 .then(res =>
                     commit('LOAD_SUCCESS', JSON.parse(res.data))
                 )
+                .catch(commit('ERROR'))
         }
         ,
         addProfilePicture({commit}, payload) {
             commit('LOADING');
             return ProfileAPI.addProfilePicture(payload)
                 .then( res => commit('IMAGE_UPLOAD_SUCCESS', JSON.parse(res.data)))
+                .catch(commit('ERROR'))
         },
         deleteProfilePicture({commit}, payload) {
             return ProfileAPI.removeProfilePicture(payload)
                 .then( res => commit('IMAGE_DELETE_SUCCESS', res))
-
+                .catch(commit('ERROR'))
+        },
+        fillingForm({commit}) {
+            commit('TYPING');
         }
     }
 }
