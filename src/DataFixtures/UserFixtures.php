@@ -44,7 +44,11 @@ class UserFixtures extends Fixture
                 ->setUsername('Username'.$i);
             $manager->persist($user);
             $profile = new UserProfile();
-            $profile->setUser($user);
+            $nbParagraph = random_int(0,20);
+            $profile->setUser($user)
+                ->setTitle(Lorem::text(16))
+                ->setDescription(Lorem::paragraph($nbParagraph))
+                ->setAge(random_int(18,99));
             $manager->persist($profile);
             $manager->flush();
             $users = $this->repository->findAll();
