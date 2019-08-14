@@ -41,6 +41,8 @@
                                     :title="title"
                                     :description="description"
                                     :age="age"
+                                    :height="height"
+                                    :weight="weight"
                             ></profile-user-form>
                         </v-card-text>
                     </v-card>
@@ -86,6 +88,12 @@
             },
             age() {
                 return this.$store.getters['profile/getAge'];
+            },
+            weight() {
+                return this.$store.getters['profile/getWeight'];
+            },
+            height() {
+                return this.$store.getters['profile/getHeight'];
             },
         }
     }

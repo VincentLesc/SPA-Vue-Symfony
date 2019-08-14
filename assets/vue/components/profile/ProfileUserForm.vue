@@ -43,8 +43,24 @@
                 multiple
             >
             </v-select>
-
-        </v-flex><v-flex xs12>
+        </v-flex>
+        <v-flex xs6>
+            <v-select
+                    v-model="displayedTall"
+                    v-on:keyup="isFilling"
+                    :items="tallRange"
+                    label="Taille"
+            ></v-select>
+        </v-flex>
+        <v-flex xs6>
+            <v-select
+                    v-model="displayedWeight"
+                    v-on:keyup="isFilling"
+                    :items="weightRange"
+                    label="Poids"
+            ></v-select>
+        </v-flex>
+        <v-flex xs12>
             <v-select
                 :items="maritalStatus"
                 item-text="title"
@@ -52,7 +68,33 @@
                 label="Situation amoureuse"
             >
             </v-select>
-
+        </v-flex>
+        <v-flex xs6>
+            <v-select
+                :items="ethnicity"
+                item-text="title"
+                item-value="id"
+                label="Origine"
+            >
+            </v-select>
+        </v-flex>
+        <v-flex xs6>
+            <v-select
+                :items="morphology"
+                item-text="title"
+                item-value="id"
+                label="Morphologie"
+            >
+            </v-select>
+        </v-flex>
+        <v-flex xs6>
+            <v-select
+                :items="sexualPosition"
+                item-text="title"
+                item-value="id"
+                label="Préférences"
+            >
+            </v-select>
         </v-flex>
         <v-flex xs6 offset-6>
             <v-btn
@@ -78,13 +120,17 @@
             title: String,
             description: [Text,String],
             age: Number,
-            showAge: Boolean
+            showAge: Boolean,
+            height: Number,
+            weight: Number
         },
         data(){
             return{
                 displayedTitle: this.title,
                 displayedDescription: this.description,
                 displayedAge: this.age,
+                displayedTall: this.height,
+                displayedWeight: this.weight,
                 shownAge: this.showAge
             }
         },
@@ -95,6 +141,20 @@
                     age.push(i);
                 }
                 return age;
+            },
+            tallRange(){
+                let tall = [];
+                for (let i=150; i<230; i++) {
+                    tall.push(i);
+                }
+                return tall;
+            },
+            weightRange(){
+                let weight = [];
+                for (let i=45; i<145; i++) {
+                    weight.push(i);
+                }
+                return weight;
             },
             ageOption() {
                 return this.shownAge === true ? 'Masquer' : 'Afficher';
@@ -113,14 +173,25 @@
             },
             maritalStatus() {
                 return this.$store.getters['app/maritalStatus'];
-            }
+            },
+            ethnicity() {
+                return this.$store.getters['app/ethnicity'];
+            },
+            morphology() {
+                return this.$store.getters['app/morphology'];
+            },
+            sexualPosition() {
+                return this.$store.getters['app/sexualPosition'];
+            },
         },
         methods: {
             submit() {
                 let payload = {
                     title: this.displayedTitle,
                     description: this.displayedDescription,
-                    age: this.displayedAge
+                    age: this.displayedAge,
+                    height: this.displayedTall,
+                    weight: this.displayedWeight,
                 };
                 this.$store.dispatch('profile/updateProfile', payload)
             },

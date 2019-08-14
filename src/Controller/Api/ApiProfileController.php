@@ -47,7 +47,9 @@ class ApiProfileController extends AbstractController
                     'mainPicture',
                     'title',
                     'description',
-                    'age'
+                    'age',
+                    'height',
+                    'weight'
                 ]
             ]
         );
@@ -165,6 +167,7 @@ class ApiProfileController extends AbstractController
      */
     public function updateProfile(Request $request, UserProfileMediaRepository $mediaRepository, ValidatorInterface $validator)
     {
+        //TODO Security
         if (!$this->getUser())
             return new JsonResponse('Not connected', 401);
 
@@ -185,8 +188,9 @@ class ApiProfileController extends AbstractController
             $profile->setTitle($data->title);
             $profile->setDescription($data->description);
             $profile->setAge($data->age);
+            $profile->setHeight($data->height);
+            $profile->setWeight($data->weight);
         }
-        dump($validator->validate($profile));
 
         $this->em->persist($profile);
         $this->em->flush();
@@ -200,7 +204,9 @@ class ApiProfileController extends AbstractController
                     'mainPicture',
                     'title',
                     'description',
-                    'age'
+                    'age',
+                    'weight',
+                    'height'
                 ]
             ]
         );

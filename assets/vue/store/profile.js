@@ -8,6 +8,8 @@ export default {
         title: '',
         description: '',
         age: '',
+        weight: '',
+        height: '',
         isLoading: false,
         hasError: false,
         isTyping: false,
@@ -30,6 +32,12 @@ export default {
         },
         getAge(state) {
             return state.age;
+        },
+        getHeight(state) {
+            return state.height;
+        },
+        getWeight(state) {
+            return state.weight;
         },
         getHasError(state) {
             return state.hasError;
@@ -58,6 +66,8 @@ export default {
             state.age = payload.age;
             state.title = payload.title;
             state.description = payload.description;
+            state.height = payload.height;
+            state.weight = payload.weight;
             state.hasError = false;
         },
         ['IMAGE_UPLOAD_SUCCESS'](state, payload) {

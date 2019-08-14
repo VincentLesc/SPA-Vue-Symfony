@@ -3,7 +3,10 @@
 namespace App\Controller\Api;
 
 use App\Entity\AppEntity\CommunityGroup;
+use App\Entity\AppEntity\Ethnicity;
 use App\Entity\AppEntity\MaritalStatus;
+use App\Entity\AppEntity\Morphology;
+use App\Entity\AppEntity\SexualPosition;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,15 +25,26 @@ Class ApiAppGlobalController extends AbstractController
      */
     public function appParameters()
     {
+        //TODO Create a Cache FileSystem
+
         $groups = $this->getDoctrine()->getRepository(CommunityGroup::class)->findAll();
         $maritalStatus = $this->getDoctrine()->getRepository(MaritalStatus::class)->findAll();
+        $ethnicity = $this->getDoctrine()->getRepository(Ethnicity::class)->findAll();
+        $morphology = $this->getDoctrine()->getRepository(Morphology::class)->findAll();
+        $sexualPosition = $this->getDoctrine()->getRepository(SexualPosition::class)->findAll();
 
         $dataGroups = $this->__serializer()->serialize($groups, 'json');
         $dataMaritalStatus = $this->__serializer()->serialize($maritalStatus, 'json');
+        $dataEthnicityStatus = $this->__serializer()->serialize($ethnicity, 'json');
+        $dataMorphology = $this->__serializer()->serialize($morphology, 'json');
+        $dataSexualPosition = $this->__serializer()->serialize($sexualPosition, 'json');
 
         return $this->json([
             'groups' => $dataGroups,
-            'maritalStatus' => $dataMaritalStatus
+            'maritalStatus' => $dataMaritalStatus,
+            'ethnicity' => $dataEthnicityStatus,
+            'morphology' => $dataMorphology,
+            'sexualPosition' => $dataSexualPosition
         ], 200);
 
     }
