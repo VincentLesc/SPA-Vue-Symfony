@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -36,7 +37,7 @@ class SecurityController extends AbstractController
      * @param ObjectManager $em
      * @return JsonResponse
      */
-    public function register(Request $request, ObjectManager $em)
+    public function register(Request $request, ObjectManager $em, ValidatorInterface $validator)
     {
         $data = $request->getContent();
         $encoders = [new JsonEncoder()];
@@ -45,6 +46,14 @@ class SecurityController extends AbstractController
         $serializer = new Serializer([$normalizer], $encoders);
 
         $user = $serializer->deserialize($data, 'App\Entity\User', 'json');
+        $errors = $validator->validate($user);
+        $errorsMessages = [];
+        if (count($errors) > 0) {
+            foreach ($errors as $error)
+                $errorsMessages[] = $error->getConstraint()->message;
+
+            return new JsonResponse($errorsMessages, 500);
+        }
 
         $em->persist($user);
         $em->flush();

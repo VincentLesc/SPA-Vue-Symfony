@@ -24,9 +24,8 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank(message="L'email doit être renseigné.")
-     * @Assert\Unique()
-     * @Assert\Regex(
-     *     pattern="/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/",
+     * @Assert\Unique(message="Vous ne pouvez pas utiliser cette adresse.")
+     * @Assert\Email(
      *     message="Le format de l'adresse mail n'est pas correct"
      * )
      */
@@ -40,7 +39,6 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="Le mot de passe doit être renseigné.")
      */
     private $password;
 

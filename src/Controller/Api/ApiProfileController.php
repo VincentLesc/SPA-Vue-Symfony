@@ -34,6 +34,8 @@ class ApiProfileController extends AbstractController
      * @throws ExceptionInterface
      */
     public function getUserProfile() {
+        if (!$this->getUser())
+            return new JsonResponse('Not connected', 403);
         $profile = $this->getUser()->getUserProfile();
         $data = $this->__serializer()->normalize($profile,
             'json', [
