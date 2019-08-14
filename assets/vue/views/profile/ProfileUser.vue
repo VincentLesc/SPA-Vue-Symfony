@@ -86,7 +86,7 @@
             },
             age() {
                 return this.$store.getters['profile/getAge'];
-            }
+            },
         }
     }
 </script>

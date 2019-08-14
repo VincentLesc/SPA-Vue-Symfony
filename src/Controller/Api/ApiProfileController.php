@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ApiProfileController extends AbstractController
 {
@@ -35,7 +36,8 @@ class ApiProfileController extends AbstractController
      */
     public function getUserProfile() {
         if (!$this->getUser())
-            return new JsonResponse('Not connected', 403);
+            return new JsonResponse('Not connected', 401);
+
         $profile = $this->getUser()->getUserProfile();
         $data = $this->__serializer()->normalize($profile,
             'json', [
@@ -63,6 +65,9 @@ class ApiProfileController extends AbstractController
      */
     public function createProfileMedia(Request $request)
     {
+        if (!$this->getUser())
+            return new JsonResponse('Not connected', 401);
+
         $user = $this->getUser();
         $data = $request->files->get('file');
         $filename = $user->getUsername() . '_' . uniqid(). '.' . $data->guessExtension();
@@ -75,10 +80,6 @@ class ApiProfileController extends AbstractController
         $media->setFile($filename)
             ->setCreatedAt(new \DateTime('now'))
             ->setProfile($this->getUser()->getUserProfile());
-
-        $validator = $this->get('validator');
-        dump($validator);
-
         $this->em->persist($media);
         $this->em->flush();
 
@@ -104,12 +105,16 @@ class ApiProfileController extends AbstractController
      */
     public function deleteProfileMedia(UserProfileMedia $media)
     {
-        if ($media->getProfile()->getUser() !== $this->getUser()) {
+        if (!$this->getUser())
+            return new JsonResponse('Not connected', 401);
+
+        if ($media->getProfile()->getUser() !== $this->getUser())
             return $this->json('Not Allowed', 401);
-        };
-        if ($media->getProfile()->getMainPicture() === $media) {
+
+        if ($media->getProfile()->getMainPicture() === $media)
             return $this->json('Not Allowed', 401);
-        }
+
+
         $id = $media->getId();
         $filename = $media->getFile();
         $this->em->remove($media);
@@ -132,7 +137,14 @@ class ApiProfileController extends AbstractController
      */
     public function updateProfileMedia(UserProfileMedia $media, Request $request)
     {
+        if (!$this->getUser())
+            return new JsonResponse('Not connected', 401);
+
+        if ($media->getProfile()->getUser() !== $this->getUser())
+            return $this->json('Not Allowed', 401);
+
         $data = json_decode($request->getContent());
+
         if (isset($data->isPublic)) {
             $media->setIsPublic($data->isPublic);
         }
@@ -147,13 +159,18 @@ class ApiProfileController extends AbstractController
      * @Route("api/profile/update", name="update_profile", methods={"PUT"})
      * @param Request $request
      * @param UserProfileMediaRepository $mediaRepository
+     * @param ValidatorInterface $validator
      * @return JsonResponse
      * @throws ExceptionInterface
      */
-    public function updateProfile(Request $request, UserProfileMediaRepository $mediaRepository)
+    public function updateProfile(Request $request, UserProfileMediaRepository $mediaRepository, ValidatorInterface $validator)
     {
+        if (!$this->getUser())
+            return new JsonResponse('Not connected', 401);
+
         /** @var UserProfile $profile */
         $profile = $this->getUser()->getUserProfile();
+
         $data = json_decode($request->getContent());
         if (isset($data->mainPicture)) {
             $mainPicture = $mediaRepository->find($data->mainPicture);
@@ -169,6 +186,7 @@ class ApiProfileController extends AbstractController
             $profile->setDescription($data->description);
             $profile->setAge($data->age);
         }
+        dump($validator->validate($profile));
 
         $this->em->persist($profile);
         $this->em->flush();

@@ -2,10 +2,14 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\AppEntity\CommunityGroup;
+use App\Entity\AppEntity\MaritalStatus;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Entity\UserProfileMedia;
+use App\Repository\AppEntity\CommunityGroupRepository;
+use App\Repository\AppEntity\MaritalStatusRepository;
 use App\Repository\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -23,19 +27,43 @@ class UserFixtures extends Fixture
 
     private $container;
 
+    private $maritalStatusRepository;
+
+    private $groupsRepository;
+
     public function __construct(
         UserPasswordEncoderInterface $encoder,
         UserRepository $userRepository,
-        ContainerInterface $container
+        ContainerInterface $container,
+        MaritalStatusRepository $maritalStatusRepository,
+        CommunityGroupRepository $groupsRepository
     )
     {
         $this->encoder = $encoder;
         $this->repository = $userRepository;
         $this->container = $container;
+        $this->maritalStatusRepository = $maritalStatusRepository;
+        $this->groupsRepository = $groupsRepository;
     }
 
     public function load(ObjectManager $manager)
     {
+        $status = ['marié', 'célibataire', 'union libre', 'pacsé', 'compliqué'];
+        foreach ($status as $title) {
+            $maritalStatus = new MaritalStatus();
+            $maritalStatus->setTitle($title);
+            $manager->persist($maritalStatus);
+            $manager->flush();
+        }
+
+        $groups = ['bear', 'teen', 'exhib', 'sm', 'fist'];
+        foreach ($groups as $title) {
+            $group = new CommunityGroup();
+            $group->setTitle($title);
+            $manager->persist($group);
+            $manager->flush();
+        }
+
         for ($i=0; $i<100; $i++) {
 
             $user = new User();
@@ -49,6 +77,10 @@ class UserFixtures extends Fixture
                 ->setTitle(Lorem::text(16))
                 ->setDescription(Lorem::paragraph($nbParagraph))
                 ->setAge(random_int(18,99));
+            $maritalStatus = shuffle($status);
+            $groupStatus = shuffle($groups);
+            $profile->setMaritalStatus($this->maritalStatusRepository->findOneBy(['title'=>$maritalStatus[0]]));
+            $profile->addGroup($this->groupsRepository->findOneBy(['title'=>'bear']));
             $manager->persist($profile);
             $manager->flush();
             $users = $this->repository->findAll();

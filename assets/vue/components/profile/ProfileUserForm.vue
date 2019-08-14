@@ -6,7 +6,6 @@
                     v-on:keyup="typing"
                     label="Titre du profil"
                     counter="16"
-                    append-outer-icon="place"
                     clearable
             ></v-text-field>
         </v-flex>
@@ -28,13 +27,33 @@
             ></v-select>
         </v-flex>
         <v-spacer></v-spacer>
-        <v-flex xs5>
+        <v-flex xs4 offset-2>
             <v-switch
                     v-model="shownAge"
                     :label="ageOption"
             ></v-switch>
         </v-flex>
-        <v-spacer></v-spacer>
+        <v-flex xs12>
+            <v-select
+                :items="groups"
+                item-text="title"
+                item-value="id"
+                label="Groupes"
+                chips
+                multiple
+            >
+            </v-select>
+
+        </v-flex><v-flex xs12>
+            <v-select
+                :items="maritalStatus"
+                item-text="title"
+                item-value="id"
+                label="Situation amoureuse"
+            >
+            </v-select>
+
+        </v-flex>
         <v-flex xs6 offset-6>
             <v-btn
                     width="100%"
@@ -88,6 +107,12 @@
             },
             isFilling() {
                 return this.$store.getters['profile/getIsTyping'];
+            },
+            groups() {
+                return this.$store.getters['app/groups'];
+            },
+            maritalStatus() {
+                return this.$store.getters['app/maritalStatus'];
             }
         },
         methods: {

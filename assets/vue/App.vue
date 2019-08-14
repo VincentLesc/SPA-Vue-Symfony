@@ -8,7 +8,7 @@
         </app-navigation-top>
         <notifications></notifications>
         <v-content>
-                <router-view></router-view>
+            <router-view></router-view>
         </v-content>
         <app-footer></app-footer>
     </v-app>
@@ -32,7 +32,7 @@
             let isAuthenticated = JSON.parse(this.$parent.$el.attributes['data-is-authenticated'].value);
             this.$store.dispatch('security/onRefreshAuthentication', isAuthenticated)
                 .then(()=>(this.$store.dispatch('profile/loadProfile')));
-
+            this.$store.dispatch('app/loadAppParameters');
             axios.interceptors.response.use(undefined, (err) => {
                 return new Promise(() => {
                     console.log(err.response.data);
