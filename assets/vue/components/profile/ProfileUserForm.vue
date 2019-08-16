@@ -35,7 +35,8 @@
         </v-flex>
         <v-flex xs12>
             <v-select
-                :items="groups"
+                    v-model="displayedGroups"
+                :items="groupsChoices"
                 item-text="title"
                 item-value="id"
                 label="Groupes"
@@ -62,7 +63,8 @@
         </v-flex>
         <v-flex xs12>
             <v-select
-                :items="maritalStatus"
+                    v-model="displayedMaritalStatus"
+                :items="maritalStatusChoices"
                 item-text="title"
                 item-value="id"
                 label="Situation amoureuse"
@@ -71,7 +73,8 @@
         </v-flex>
         <v-flex xs6>
             <v-select
-                :items="ethnicity"
+                    v-model="displayedEthnicity"
+                :items="ethnicityChoices"
                 item-text="title"
                 item-value="id"
                 label="Origine"
@@ -80,7 +83,8 @@
         </v-flex>
         <v-flex xs6>
             <v-select
-                :items="morphology"
+                    v-model="displayedMorphology"
+                :items="morphologyChoices"
                 item-text="title"
                 item-value="id"
                 label="Morphologie"
@@ -89,7 +93,8 @@
         </v-flex>
         <v-flex xs6>
             <v-select
-                :items="sexualPosition"
+                    v-model="displayedSexualPosition"
+                :items="sexualPositionChoices"
                 item-text="title"
                 item-value="id"
                 label="Préférences"
@@ -122,7 +127,12 @@
             age: Number,
             showAge: Boolean,
             height: Number,
-            weight: Number
+            weight: Number,
+            marital: Object,
+            groups: Array,
+            ethnicity: Object,
+            morphology: Object,
+            sexualPosition: Object
         },
         data(){
             return{
@@ -131,7 +141,12 @@
                 displayedAge: this.age,
                 displayedTall: this.height,
                 displayedWeight: this.weight,
-                shownAge: this.showAge
+                displayedMaritalStatus: this.marital ? this.marital.id : null,
+                displayedGroups: this.groups,
+                displayedEthnicity: this.ethnicity ? this.ethnicity.id : null,
+                displayedMorphology: this.morphology ? this.morphology.id : null,
+                displayedSexualPosition: this.sexualPosition ? this.sexualPosition.id: null,
+                shownAge: this.showAge,
             }
         },
         computed: {
@@ -168,19 +183,19 @@
             isFilling() {
                 return this.$store.getters['profile/getIsTyping'];
             },
-            groups() {
+            groupsChoices() {
                 return this.$store.getters['app/groups'];
             },
-            maritalStatus() {
+            maritalStatusChoices() {
                 return this.$store.getters['app/maritalStatus'];
             },
-            ethnicity() {
+            ethnicityChoices() {
                 return this.$store.getters['app/ethnicity'];
             },
-            morphology() {
+            morphologyChoices() {
                 return this.$store.getters['app/morphology'];
             },
-            sexualPosition() {
+            sexualPositionChoices() {
                 return this.$store.getters['app/sexualPosition'];
             },
         },
@@ -192,6 +207,11 @@
                     age: this.displayedAge,
                     height: this.displayedTall,
                     weight: this.displayedWeight,
+                    maritalStatus: this.displayedMaritalStatus,
+                    groups: this.displayedGroups,
+                    ethnicity: this.displayedEthnicity,
+                    morphology: this.displayedMorphology,
+                    sexualPosition: this.displayedSexualPosition
                 };
                 this.$store.dispatch('profile/updateProfile', payload)
             },

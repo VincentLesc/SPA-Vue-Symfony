@@ -4,6 +4,11 @@
 namespace App\Controller\Api;
 
 
+use App\Entity\AppEntity\CommunityGroup;
+use App\Entity\AppEntity\Ethnicity;
+use App\Entity\AppEntity\MaritalStatus;
+use App\Entity\AppEntity\Morphology;
+use App\Entity\AppEntity\SexualPosition;
 use App\Entity\UserProfile;
 use App\Entity\UserProfileMedia;
 use App\Repository\UserProfileMediaRepository;
@@ -49,7 +54,12 @@ class ApiProfileController extends AbstractController
                     'description',
                     'age',
                     'height',
-                    'weight'
+                    'weight',
+                    'maritalStatus',
+                    'groups',
+                    'ethnicity',
+                    'morphology',
+                    'sexualPosition'
                 ]
             ]
         );
@@ -190,6 +200,44 @@ class ApiProfileController extends AbstractController
             $profile->setAge($data->age);
             $profile->setHeight($data->height);
             $profile->setWeight($data->weight);
+            $alreadySet = [];
+            foreach ($profile->getGroups() as $group){
+                $alreadySet[] = $group->getId();
+            }
+            $tobeRemoved = array_diff($alreadySet, $data->groups);
+            $tobeAdded = array_diff($data->groups, $alreadySet);
+            foreach ($tobeAdded as $item) {
+                $profile->addGroup(
+                    $this->getDoctrine()->getRepository(CommunityGroup::class)
+                        ->find($item)
+                );
+            };
+            foreach ($tobeRemoved as $item) {
+                $profile->removeGroup(
+                    $this->getDoctrine()->getRepository(CommunityGroup::class)
+                        ->find($item)
+                );
+            }
+            if ($data->ethnicity !== null) {
+                $profile->setEthnicity($this->getDoctrine()->getRepository(Ethnicity::class)
+                    ->find($data->ethnicity));
+            }
+            if ($data->morphology !== null) {
+                $profile->setMorphology($this->getDoctrine()->getRepository(Morphology::class)
+                    ->find($data->morphology)
+                );
+            }
+            if ($data->sexualPosition !== null) {
+                $profile->setSexualPosition($this->getDoctrine()->getRepository(SexualPosition::class)
+                    ->find($data->sexualPosition)
+                );
+            }
+            if ($data->maritalStatus !== null) {
+                $profile->setMaritalStatus(
+                    $this->getDoctrine()->getRepository(MaritalStatus::class)
+                        ->find($data->maritalStatus)
+                );
+            }
         }
 
         $this->em->persist($profile);
