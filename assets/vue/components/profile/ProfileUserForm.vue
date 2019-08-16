@@ -14,7 +14,6 @@
                     v-model="displayedDescription"
                     v-on:keyup="isFilling"
                     label="Description"
-                    auto-grow
                     clearable
             ></v-textarea>
         </v-flex>

@@ -7,6 +7,12 @@ use App\Entity\AppEntity\Ethnicity;
 use App\Entity\AppEntity\MaritalStatus;
 use App\Entity\AppEntity\Morphology;
 use App\Entity\AppEntity\SexualPosition;
+use App\Repository\AppEntity\CommunityGroupRepository;
+use App\Repository\AppEntity\EthnicityRepository;
+use App\Repository\AppEntity\MaritalStatusRepository;
+use App\Repository\AppEntity\MorphologyRepository;
+use App\Repository\AppEntity\SexualPositionRepository;
+use App\Service\App\AppCache;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,17 +27,28 @@ Class ApiAppGlobalController extends AbstractController
 
     /**
      * @Route("/api/app/params", name="app_params", methods={"GET"})
+     * @param AppCache $appCache
+     * @param CommunityGroupRepository $communityGroupRepository
+     * @param MaritalStatusRepository $maritalStatusRepository
+     * @param EthnicityRepository $ethnicityRepository
+     * @param MorphologyRepository $morphologyRepository
+     * @param SexualPositionRepository $sexualPositionRepository
      * @return JsonResponse
      */
-    public function appParameters()
+    public function appParameters(
+        AppCache $appCache,
+        CommunityGroupRepository $communityGroupRepository,
+        MaritalStatusRepository $maritalStatusRepository,
+        EthnicityRepository $ethnicityRepository,
+        MorphologyRepository $morphologyRepository,
+        SexualPositionRepository $sexualPositionRepository
+    )
     {
-        //TODO Create a Cache FileSystem
-
-        $groups = $this->getDoctrine()->getRepository(CommunityGroup::class)->findAll();
-        $maritalStatus = $this->getDoctrine()->getRepository(MaritalStatus::class)->findAll();
-        $ethnicity = $this->getDoctrine()->getRepository(Ethnicity::class)->findAll();
-        $morphology = $this->getDoctrine()->getRepository(Morphology::class)->findAll();
-        $sexualPosition = $this->getDoctrine()->getRepository(SexualPosition::class)->findAll();
+        $groups = $appCache->getAppCachedGlobalEntity($communityGroupRepository, 'group');
+        $maritalStatus = $appCache->getAppCachedGlobalEntity($maritalStatusRepository, 'marital-status');
+        $ethnicity = $appCache->getAppCachedGlobalEntity($ethnicityRepository, 'ethnicity');
+        $morphology = $appCache->getAppCachedGlobalEntity($morphologyRepository, 'morphology');
+        $sexualPosition = $appCache->getAppCachedGlobalEntity($sexualPositionRepository, 'sexual-position');
 
         $dataGroups = $this->__serializer()->serialize($groups, 'json');
         $dataMaritalStatus = $this->__serializer()->serialize($maritalStatus, 'json');

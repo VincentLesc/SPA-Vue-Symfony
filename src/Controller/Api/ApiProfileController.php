@@ -12,6 +12,7 @@ use App\Entity\AppEntity\SexualPosition;
 use App\Entity\UserProfile;
 use App\Entity\UserProfileMedia;
 use App\Repository\UserProfileMediaRepository;
+use App\Service\App\AppCache;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -172,10 +173,16 @@ class ApiProfileController extends AbstractController
      * @param Request $request
      * @param UserProfileMediaRepository $mediaRepository
      * @param ValidatorInterface $validator
+     * @param AppCache $appCache
      * @return JsonResponse
      * @throws ExceptionInterface
      */
-    public function updateProfile(Request $request, UserProfileMediaRepository $mediaRepository, ValidatorInterface $validator)
+    public function updateProfile(
+        Request $request,
+        UserProfileMediaRepository $mediaRepository,
+        ValidatorInterface $validator,
+        AppCache $appCache
+    )
     {
         //TODO Security
         if (!$this->getUser())
@@ -208,34 +215,60 @@ class ApiProfileController extends AbstractController
             $tobeAdded = array_diff($data->groups, $alreadySet);
             foreach ($tobeAdded as $item) {
                 $profile->addGroup(
-                    $this->getDoctrine()->getRepository(CommunityGroup::class)
-                        ->find($item)
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            CommunityGroup::class),
+                        $item,
+                        'group'
+                    )
                 );
             };
             foreach ($tobeRemoved as $item) {
                 $profile->removeGroup(
-                    $this->getDoctrine()->getRepository(CommunityGroup::class)
-                        ->find($item)
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            CommunityGroup::class),
+                        $item,
+                        'group'
+                    )
                 );
             }
             if ($data->ethnicity !== null) {
-                $profile->setEthnicity($this->getDoctrine()->getRepository(Ethnicity::class)
-                    ->find($data->ethnicity));
+                $appCache->getAppCachedProperty(
+                    $this->getDoctrine()->getRepository(
+                        Ethnicity::class),
+                    $data->ethnicity,
+                    'ethnicity'
+                );
             }
             if ($data->morphology !== null) {
-                $profile->setMorphology($this->getDoctrine()->getRepository(Morphology::class)
-                    ->find($data->morphology)
+                $profile->setMorphology(
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            Morphology::class),
+                        $data->morphology,
+                        'morphology'
+                    )
                 );
             }
             if ($data->sexualPosition !== null) {
-                $profile->setSexualPosition($this->getDoctrine()->getRepository(SexualPosition::class)
-                    ->find($data->sexualPosition)
+                $profile->setSexualPosition(
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            SexualPosition::class),
+                        $data->sexualPosition,
+                        'sexual-position'
+                    )
                 );
             }
             if ($data->maritalStatus !== null) {
                 $profile->setMaritalStatus(
-                    $this->getDoctrine()->getRepository(MaritalStatus::class)
-                        ->find($data->maritalStatus)
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            MaritalStatus::class),
+                        $data->maritalStatus,
+                        'marital-status'
+                    )
                 );
             }
         }
