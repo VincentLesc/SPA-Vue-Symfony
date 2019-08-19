@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Entity\AppEntity\CommunityGroup;
+use App\Entity\AppEntity\Ethnicity;
 use App\Entity\AppEntity\MaritalStatus;
+use App\Entity\AppEntity\Morphology;
+use App\Entity\AppEntity\SexualPosition;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -70,28 +73,21 @@ class UserProfile
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(
+     *     type="integer",
+     *     message="{{value}} n'est pas une taille valide."
+     * )
      */
     private $height;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(
+     *     type="integer",
+     *     message="{{value}} n'est pas un poids valide."
+     * )
      */
     private $weight;
-
-    /**
-     * @ORM\Column(type="string", length=32, nullable=true)
-     */
-    private $ethnicity;
-
-    /**
-     * @ORM\Column(type="string", length=32, nullable=true)
-     */
-    private $morphology;
-
-    /**
-     * @ORM\Column(type="string", length=32, nullable=true)
-     */
-    private $sexualPosition;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\AppEntity\MaritalStatus")
@@ -102,6 +98,21 @@ class UserProfile
      * @ORM\ManyToMany(targetEntity="App\Entity\AppEntity\CommunityGroup")
      */
     private $groups;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\AppEntity\Ethnicity")
+     */
+    private $ethnicity;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\AppEntity\Morphology")
+     */
+    private $morphology;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\AppEntity\SexualPosition")
+     */
+    private $sexualPosition;
 
 
     public function __construct()
@@ -230,42 +241,6 @@ class UserProfile
         return $this;
     }
 
-    public function getEthnicity(): ?string
-    {
-        return $this->ethnicity;
-    }
-
-    public function setEthnicity(?string $ethnicity): self
-    {
-        $this->ethnicity = $ethnicity;
-
-        return $this;
-    }
-
-    public function getMorphology(): ?string
-    {
-        return $this->morphology;
-    }
-
-    public function setMorphology(?string $morphology): self
-    {
-        $this->morphology = $morphology;
-
-        return $this;
-    }
-
-    public function getSexualPosition(): ?string
-    {
-        return $this->sexualPosition;
-    }
-
-    public function setSexualPosition(?string $sexualPosition): self
-    {
-        $this->sexualPosition = $sexualPosition;
-
-        return $this;
-    }
-
     public function getMaritalStatus(): ?MaritalStatus
     {
         return $this->maritalStatus;
@@ -300,6 +275,42 @@ class UserProfile
         if ($this->groups->contains($group)) {
             $this->groups->removeElement($group);
         }
+
+        return $this;
+    }
+
+    public function getEthnicity(): ?Ethnicity
+    {
+        return $this->ethnicity;
+    }
+
+    public function setEthnicity(?Ethnicity $ethnicity): self
+    {
+        $this->ethnicity = $ethnicity;
+
+        return $this;
+    }
+
+    public function getMorphology(): ?Morphology
+    {
+        return $this->morphology;
+    }
+
+    public function setMorphology(?Morphology $morphology): self
+    {
+        $this->morphology = $morphology;
+
+        return $this;
+    }
+
+    public function getSexualPosition(): ?SexualPosition
+    {
+        return $this->sexualPosition;
+    }
+
+    public function setSexualPosition(?SexualPosition $sexualPosition): self
+    {
+        $this->sexualPosition = $sexualPosition;
 
         return $this;
     }

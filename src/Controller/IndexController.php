@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/{vueRouter}/{action}/{id}", name="index", requirements={"vueRouter"="^(?!api|_(profiler|wdt)).*"})
+     * @Route("/{vueRouter}/{action}/{id}", name="index", requirements={"vueRouter"="^(?!api|_(profiler|wdt)|admin).*"})
      */
     public function index( $vueRouter = null ,$action = null, $id = null)
     {

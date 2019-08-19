@@ -41,6 +41,13 @@
                                     :title="title"
                                     :description="description"
                                     :age="age"
+                                    :height="height"
+                                    :weight="weight"
+                                    :marital="maritalStatus"
+                                    :groups="groups"
+                                    :ethnicity="ethnicity"
+                                    :morphology="morphology"
+                                    :sexual-position="sexualPosition"
                             ></profile-user-form>
                         </v-card-text>
                     </v-card>
@@ -87,6 +94,27 @@
             age() {
                 return this.$store.getters['profile/getAge'];
             },
+            weight() {
+                return this.$store.getters['profile/getWeight'];
+            },
+            height() {
+                return this.$store.getters['profile/getHeight'];
+            },
+            maritalStatus() {
+                return this.$store.getters['profile/getMaritalStatus'];
+            },
+            groups() {
+                return this.$store.getters['profile/getGroups'];
+            },
+            morphology() {
+                return this.$store.getters['profile/getMorphology'];
+            },
+            ethnicity() {
+                return this.$store.getters['profile/getEthnicity'];
+            },
+            sexualPosition() {
+                return this.$store.getters['profile/getSexualPosition'];
+            }
         }
     }
 </script>

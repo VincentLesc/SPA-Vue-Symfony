@@ -36,7 +36,7 @@
             axios.interceptors.response.use(undefined, (err) => {
                 return new Promise(() => {
                     console.log(err.response.data);
-                    if (err.response.status === 403) {
+                    if (err.response.status === 401) {
                         this.$router.push({path: '/login'})
                     } else if (err.response.status === 500) {
                         document.open();

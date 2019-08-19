@@ -4,9 +4,15 @@
 namespace App\Controller\Api;
 
 
+use App\Entity\AppEntity\CommunityGroup;
+use App\Entity\AppEntity\Ethnicity;
+use App\Entity\AppEntity\MaritalStatus;
+use App\Entity\AppEntity\Morphology;
+use App\Entity\AppEntity\SexualPosition;
 use App\Entity\UserProfile;
 use App\Entity\UserProfileMedia;
 use App\Repository\UserProfileMediaRepository;
+use App\Service\App\AppCache;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,7 +53,14 @@ class ApiProfileController extends AbstractController
                     'mainPicture',
                     'title',
                     'description',
-                    'age'
+                    'age',
+                    'height',
+                    'weight',
+                    'maritalStatus',
+                    'groups',
+                    'ethnicity',
+                    'morphology',
+                    'sexualPosition'
                 ]
             ]
         );
@@ -160,11 +173,18 @@ class ApiProfileController extends AbstractController
      * @param Request $request
      * @param UserProfileMediaRepository $mediaRepository
      * @param ValidatorInterface $validator
+     * @param AppCache $appCache
      * @return JsonResponse
      * @throws ExceptionInterface
      */
-    public function updateProfile(Request $request, UserProfileMediaRepository $mediaRepository, ValidatorInterface $validator)
+    public function updateProfile(
+        Request $request,
+        UserProfileMediaRepository $mediaRepository,
+        ValidatorInterface $validator,
+        AppCache $appCache
+    )
     {
+        //TODO Security
         if (!$this->getUser())
             return new JsonResponse('Not connected', 401);
 
@@ -185,8 +205,73 @@ class ApiProfileController extends AbstractController
             $profile->setTitle($data->title);
             $profile->setDescription($data->description);
             $profile->setAge($data->age);
+            $profile->setHeight($data->height);
+            $profile->setWeight($data->weight);
+            $alreadySet = [];
+            foreach ($profile->getGroups() as $group){
+                $alreadySet[] = $group->getId();
+            }
+            $tobeRemoved = array_diff($alreadySet, $data->groups);
+            $tobeAdded = array_diff($data->groups, $alreadySet);
+            foreach ($tobeAdded as $item) {
+                $profile->addGroup(
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            CommunityGroup::class),
+                        $item,
+                        'group'
+                    )
+                );
+            };
+            foreach ($tobeRemoved as $item) {
+                $profile->removeGroup(
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            CommunityGroup::class),
+                        $item,
+                        'group'
+                    )
+                );
+            }
+            if ($data->ethnicity !== null) {
+                $appCache->getAppCachedProperty(
+                    $this->getDoctrine()->getRepository(
+                        Ethnicity::class),
+                    $data->ethnicity,
+                    'ethnicity'
+                );
+            }
+            if ($data->morphology !== null) {
+                $profile->setMorphology(
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            Morphology::class),
+                        $data->morphology,
+                        'morphology'
+                    )
+                );
+            }
+            if ($data->sexualPosition !== null) {
+                $profile->setSexualPosition(
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            SexualPosition::class),
+                        $data->sexualPosition,
+                        'sexual-position'
+                    )
+                );
+            }
+            if ($data->maritalStatus !== null) {
+                $profile->setMaritalStatus(
+                    $appCache->getAppCachedProperty(
+                        $this->getDoctrine()->getRepository(
+                            MaritalStatus::class),
+                        $data->maritalStatus,
+                        'marital-status'
+                    )
+                );
+            }
         }
-        dump($validator->validate($profile));
 
         $this->em->persist($profile);
         $this->em->flush();
@@ -200,7 +285,9 @@ class ApiProfileController extends AbstractController
                     'mainPicture',
                     'title',
                     'description',
-                    'age'
+                    'age',
+                    'weight',
+                    'height'
                 ]
             ]
         );

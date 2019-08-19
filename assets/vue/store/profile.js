@@ -8,6 +8,13 @@ export default {
         title: '',
         description: '',
         age: '',
+        weight: '',
+        height: '',
+        maritalStatus: '',
+        groups: [],
+        ethnicity: '',
+        morphology: '',
+        position: '',
         isLoading: false,
         hasError: false,
         isTyping: false,
@@ -31,11 +38,36 @@ export default {
         getAge(state) {
             return state.age;
         },
+        getHeight(state) {
+            return state.height;
+        },
+        getWeight(state) {
+            return state.weight;
+        },
         getHasError(state) {
             return state.hasError;
         },
         getIsTyping(state) {
             return state.isTyping;
+        },
+        getMaritalStatus(state) {
+            return state.maritalStatus;
+        },
+        getEthnicity(state) {
+            return state.ethnicity;
+        },
+        getMorphology(state) {
+            return state.morphology;
+        },
+        getSexualPosition(state) {
+            return state.position;
+        },
+        getGroups(state) {
+            let groupsArray = [];
+            for (let id in state.groups) {
+                groupsArray.push(state.groups[id].id);
+            }
+            return groupsArray;
         }
     },
     mutations: {
@@ -52,13 +84,22 @@ export default {
             state.isLoading = false;
         },
         ['LOAD_SUCCESS'](state, payload) {
+            console.log(payload);
             state.images = payload.userProfileMedia;
             state.mainPicture = payload.mainPicture;
             state.isLoading = false;
             state.age = payload.age;
             state.title = payload.title;
             state.description = payload.description;
+            state.height = payload.height;
+            state.weight = payload.weight;
+            state.maritalStatus =payload.maritalStatus;
+            state.groups= payload.groups;
+            state.ethnicity= payload.ethnicity;
+            state.morphology= payload.morphology;
+            state.position= payload.sexualPosition;
             state.hasError = false;
+            console.log(payload)
         },
         ['IMAGE_UPLOAD_SUCCESS'](state, payload) {
             state.images.unshift(payload);
