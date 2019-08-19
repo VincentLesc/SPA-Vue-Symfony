@@ -25,7 +25,7 @@ class UserProfileRepository extends ServiceEntityRepository
             ->andWhere('p.user != :val')
             ->setParameter('val', $excludeId)
             ->orderBy('p.id', 'DESC')
-            ->setMaxResults(50)
+            ->setMaxResults(99)
             ->getQuery()
             ->getResult()
             ;

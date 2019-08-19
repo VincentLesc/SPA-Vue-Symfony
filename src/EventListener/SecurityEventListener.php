@@ -26,7 +26,6 @@ class SecurityEventListener
 
     public function prePersist(LifecycleEventArgs $args)
     {
-        dump('event');
             if ($args->getObject() instanceof User) {
                 $this->encodePassword($args->getObject());
             }
@@ -48,7 +47,5 @@ class SecurityEventListener
         );
 
         $entity->setPassword($encoded);
-        dump($entity);
-
     }
 }

@@ -12,9 +12,6 @@ export default {
     },
     mutations: {
         ['LOAD_SUCCESS'](state, payload) {
-            for (let t in payload) {
-                console.log(payload[t]);
-            }
             state.profiles = payload
         }
     },

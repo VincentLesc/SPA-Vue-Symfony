@@ -15,10 +15,11 @@
         </v-img>
         <v-dialog
                 v-model="dialog"
-                max-width="1000"
+                class="modal"
+                scrollable
         >
-            <v-card>
-                <v-img :src="file" :id="id">
+            <v-card >
+                <v-img :src="file" :id="id" style="max-height: 90vh" contain>
                     <v-layout pa-2 row fill-height class="lightbox white--text">
                         <v-spacer></v-spacer>
                         <v-flex xs2 md1>
@@ -142,5 +143,9 @@
     }
     .red {
         color: red;
+    }
+    .modal {
+        max-height: 100vh;
+        max-width: 50vh;
     }
 </style>

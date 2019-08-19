@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserProfileMediaRepository")
@@ -18,11 +19,17 @@ class UserProfileMedia
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime(
+     *     message="{{value}} n'est pas une date valide."
+     * )
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="string", length=126)
+     * @Assert\Regex(
+     *     pattern="/(.jpg|.png|.jpeg|.gif){1}/"
+     * )
      */
     private $file;
 
@@ -34,6 +41,10 @@ class UserProfileMedia
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Assert\Type(
+     *     type="boolean",
+     *     message="{{value}} n'est pas une valeur valide."
+     * )
      */
     private $isPublic;
 

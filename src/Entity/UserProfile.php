@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
+use App\Entity\AppEntity\CommunityGroup;
+use App\Entity\AppEntity\MaritalStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserProfileRepository")
@@ -37,22 +40,74 @@ class UserProfile
 
     /**
      * @ORM\Column(type="string", length=16, nullable=true)
+     * @Assert\Length(
+     *     max="16",
+     *     maxMessage="Le titre de votre profil ne peut pas faire plus de 16 caractères."
+     * )
+     * @Assert\Regex(
+     *     pattern="/^((?!SELECT|ALTER|CREATE|DELETE|DELETETREE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UNION|UPDATE))/"
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Regex(
+     *     pattern="/^((?!SELECT|ALTER|CREATE|DELETE|DELETETREE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UNION|UPDATE))/",
+     *     message="Un ou plusieurs mots utilisés ne sont pas permis."
+     * )
      */
     private $description;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(
+     *     type="integer",
+     *     message="{{value}} n'est pas un age valide."
+     * )
      */
     private $age;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $height;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $weight;
+
+    /**
+     * @ORM\Column(type="string", length=32, nullable=true)
+     */
+    private $ethnicity;
+
+    /**
+     * @ORM\Column(type="string", length=32, nullable=true)
+     */
+    private $morphology;
+
+    /**
+     * @ORM\Column(type="string", length=32, nullable=true)
+     */
+    private $sexualPosition;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\AppEntity\MaritalStatus")
+     */
+    private $maritalStatus;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\AppEntity\CommunityGroup")
+     */
+    private $groups;
+
 
     public function __construct()
     {
         $this->userProfileMedia = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -147,6 +202,104 @@ class UserProfile
     public function setAge(?int $age): self
     {
         $this->age = $age;
+
+        return $this;
+    }
+
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(?int $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getWeight(): ?int
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(?int $weight): self
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function getEthnicity(): ?string
+    {
+        return $this->ethnicity;
+    }
+
+    public function setEthnicity(?string $ethnicity): self
+    {
+        $this->ethnicity = $ethnicity;
+
+        return $this;
+    }
+
+    public function getMorphology(): ?string
+    {
+        return $this->morphology;
+    }
+
+    public function setMorphology(?string $morphology): self
+    {
+        $this->morphology = $morphology;
+
+        return $this;
+    }
+
+    public function getSexualPosition(): ?string
+    {
+        return $this->sexualPosition;
+    }
+
+    public function setSexualPosition(?string $sexualPosition): self
+    {
+        $this->sexualPosition = $sexualPosition;
+
+        return $this;
+    }
+
+    public function getMaritalStatus(): ?MaritalStatus
+    {
+        return $this->maritalStatus;
+    }
+
+    public function setMaritalStatus(?MaritalStatus $maritalStatus): self
+    {
+        $this->maritalStatus = $maritalStatus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommunityGroup[]
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(CommunityGroup $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(CommunityGroup $group): self
+    {
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
+        }
 
         return $this;
     }

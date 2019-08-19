@@ -8,7 +8,7 @@
         </app-navigation-top>
         <notifications></notifications>
         <v-content>
-                <router-view></router-view>
+            <router-view></router-view>
         </v-content>
         <app-footer></app-footer>
     </v-app>
@@ -17,6 +17,7 @@
 <script>
     import AppFooter from './components/app/AppFooter';
     import AppNavigationTopBar from './components/app/AppNavigationTopBar';
+    import axios from 'axios';
 
     export default {
         props: {
@@ -30,8 +31,21 @@
             this.$vuetify.theme.dark = true;
             let isAuthenticated = JSON.parse(this.$parent.$el.attributes['data-is-authenticated'].value);
             this.$store.dispatch('security/onRefreshAuthentication', isAuthenticated)
-                .then(()=>(this.$store.dispatch('profile/loadProfile')))
-
+                .then(()=>(this.$store.dispatch('profile/loadProfile')));
+            this.$store.dispatch('app/loadAppParameters');
+            axios.interceptors.response.use(undefined, (err) => {
+                return new Promise(() => {
+                    console.log(err.response.data);
+                    if (err.response.status === 403) {
+                        this.$router.push({path: '/login'})
+                    } else if (err.response.status === 500) {
+                        document.open();
+                        document.write(err.response.data);
+                        document.close();
+                    }
+                    throw err;
+                });
+            });
         }
     }
 </script>
